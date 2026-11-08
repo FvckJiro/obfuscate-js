@@ -206,8 +206,6 @@
             <input type="text" id="fileName" value="obsessionhub_script">
             <button class="dl-btn" onclick="downloadFile()">3. Download as .txt</button>
         </div>
-
-        <div class="footer-note">ObsessionHub // Local, client-side obfuscation</div>
     </div>
 
     <script>
@@ -219,7 +217,7 @@
             }
 
             // The notification UI is placed inside a non-yielding thread
-            const notifyLua = `task.spawn(function() pcall(function() local TS = game:GetService("TweenService") local CG = game:GetService("CoreGui") local sg = Instance.new("ScreenGui") sg.Name = "ObsessionHubProtect" sg.Parent = CG local f = Instance.new("Frame") f.Size = UDim2.new(0, 320, 0, 50) f.Position = UDim2.new(0.5, -160, 0, -60) f.BackgroundColor3 = Color3.fromRGB(15, 15, 20) f.Parent = sg local uc = Instance.new("UICorner") uc.CornerRadius = UDim.new(0, 6) uc.Parent = f local us = Instance.new("UIStroke") us.Color = Color3.fromRGB(255, 115, 0) us.Thickness = 2 us.Parent = f local img = Instance.new("ImageLabel") img.Size = UDim2.new(0, 30, 0, 30) img.Position = UDim2.new(0, 10, 0.5, -15) img.BackgroundTransparency = 1 img.Image = "rbxassetid://10672728956" img.ImageColor3 = Color3.fromRGB(255, 115, 0) img.Parent = f local txt = Instance.new("TextLabel") txt.Size = UDim2.new(1, -50, 1, 0) txt.Position = UDim2.new(0, 50, 0, 0) txt.BackgroundTransparency = 1 txt.Text = "This script is protected by ObsessionHub" txt.TextColor3 = Color3.fromRGB(255, 255, 255) txt.Font = Enum.Font.GothamBold txt.TextSize = 14 txt.TextXAlignment = Enum.TextXAlignment.Left txt.Parent = f TS:Create(f, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -160, 0, 40)}):Play() task.wait(3.5) local tf = TweenInfo.new(1.5, Enum.EasingStyle.Linear) TS:Create(f, tf, {BackgroundTransparency = 1}):Play() TS:Create(us, tf, {Transparency = 1}):Play() TS:Create(img, tf, {ImageTransparency = 1}):Play() TS:Create(txt, tf, {TextTransparency = 1}):Play() task.wait(1.5) sg:Destroy() end) end)\n`;
+            const notifyLua = `task.spawn(function() pcall(function() local TS = game:GetService("TweenService") local CG = game:GetService("CoreGui") local sg = Instance.new("ScreenGui") sg.Name = "ObsessionHubProtect" sg.Parent = CG local f = Instance.new("Frame") f.Size = UDim2.new(0, 340, 0, 50) f.Position = UDim2.new(0.5, -170, 0, -60) f.BackgroundColor3 = Color3.fromRGB(18, 4, 6) f.Parent = sg local uc = Instance.new("UICorner") uc.CornerRadius = UDim.new(0, 8) uc.Parent = f local ug = Instance.new("UIGradient") ug.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 12, 16)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(32, 5, 7)), ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 2, 3))}) ug.Rotation = 90 ug.Parent = f local us = Instance.new("UIStroke") us.Color = Color3.fromRGB(235, 30, 45) us.Thickness = 2 us.Parent = f local usg = Instance.new("UIGradient") usg.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 110, 120)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 20, 30)), ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 110, 120))}) usg.Parent = us local img = Instance.new("ImageLabel") img.AnchorPoint = Vector2.new(0, 0.5) img.Size = UDim2.new(0, 26, 0, 26) img.Position = UDim2.new(0, 14, 0.5, 0) img.BackgroundTransparency = 1 img.Image = "rbxassetid://10672728956" img.ImageColor3 = Color3.fromRGB(255, 60, 72) img.Parent = f local txt = Instance.new("TextLabel") txt.AnchorPoint = Vector2.new(0, 0.5) txt.Size = UDim2.new(1, -64, 0, 20) txt.Position = UDim2.new(0, 54, 0.5, 0) txt.BackgroundTransparency = 1 txt.Text = "This script is protected by ObsessionHub" txt.TextColor3 = Color3.fromRGB(255, 235, 235) txt.Font = Enum.Font.GothamBold txt.TextSize = 14 txt.TextXAlignment = Enum.TextXAlignment.Left txt.TextYAlignment = Enum.TextYAlignment.Center txt.TextScaled = false txt.TextWrapped = false txt.Parent = f local tsc = Instance.new("UITextSizeConstraint") tsc.MaxTextSize = 14 tsc.MinTextSize = 10 tsc.Parent = txt txt.TextScaled = true TS:Create(f, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -170, 0, 40)}):Play() task.wait(3.5) local tf = TweenInfo.new(1.5, Enum.EasingStyle.Linear) TS:Create(f, tf, {BackgroundTransparency = 1}):Play() TS:Create(us, tf, {Transparency = 1}):Play() TS:Create(img, tf, {ImageTransparency = 1}):Play() TS:Create(txt, tf, {TextTransparency = 1}):Play() task.wait(1.5) sg:Destroy() end) end)\n`;
 
             // Merge the notification logic with the user's script
             const combinedScript = notifyLua + "\n" + input;
@@ -248,12 +246,30 @@
 
         function copyCode() {
             const outputText = document.getElementById('outputScript');
-            if (!outputText.value) return;
+            const text = outputText.value;
+            if (!text) return;
 
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert("Copied to clipboard! (" + text.length + " characters)");
+                }).catch(() => {
+                    fallbackCopy(outputText, text);
+                });
+            } else {
+                fallbackCopy(outputText, text);
+            }
+        }
+
+        function fallbackCopy(outputText, text) {
+            outputText.focus();
             outputText.select();
-            outputText.setSelectionRange(0, 999999);
-            document.execCommand("copy");
-            alert("Copied to clipboard!");
+            outputText.setSelectionRange(0, text.length);
+            const ok = document.execCommand("copy");
+            if (ok) {
+                alert("Copied to clipboard! (" + text.length + " characters)");
+            } else {
+                alert("Copy failed. Select the text manually (Ctrl+A / Cmd+A) and copy it.");
+            }
         }
 
         function downloadFile() {

@@ -1,179 +1,291 @@
-<!-- lang: html/css/js | file: index.html | runtime: browser, static | target: client-side lua obfuscator, netlify-ready -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ObsessionHub // lua obfuscator</title>
-<style>
-:root{
-  --bg:#0a0c0f; --panel:#111419; --border:#232832; --text:#e7eaee;
-  --muted:#808894; --accent:#56e39f; --accent-dim:#16362a; --err:#ff5d6c; --warn:#e8b339;
-  color-scheme: dark;
-}
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]){
-    --bg:#f3f5f7; --panel:#ffffff; --border:#dde1e6; --text:#15181b;
-    --muted:#5c6570; --accent:#0e9d63; --accent-dim:#dcf5e9; --err:#c62828; --warn:#9a6c00;
-  }
-}
-:root[data-theme="dark"]{ color-scheme: dark; }
-*{box-sizing:border-box;}
-html,body{height:100%;}
-body{
-  margin:0; background:var(--bg); color:var(--text);
-  font-family:ui-monospace,Consolas,Menlo,monospace;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
-}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);}
-header{
-  position:relative; z-index:5; padding:16px 20px; border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
-  padding-top:calc(16px + env(safe-area-inset-top,0px));
-}
-header h1{font-size:15px; margin:0;}
-header .tag{color:var(--muted); font-size:11.5px;}
-main{
-  display:grid; grid-template-columns:1fr 1fr; gap:14px;
-  padding:14px 20px 20px; max-width:1400px; margin:0 auto;
-}
-@media (max-width:860px){ main{grid-template-columns:1fr;} }
-.panel{
-  background:var(--panel); border:1px solid var(--border); border-radius:10px;
-  display:flex; flex-direction:column; min-height:340px; overflow:hidden;
-}
-.panel .bar{
-  padding:8px 12px; border-bottom:1px solid var(--border);
-  display:flex; align-items:center; justify-content:space-between; font-size:11.5px; color:var(--muted);
-}
-textarea{
-  flex:1; width:100%; border:0; outline:0; resize:none; background:transparent;
-  color:var(--text); padding:14px; font-family:inherit; font-size:12.5px; line-height:1.5;
-}
-pre{
-  flex:1; margin:0; padding:14px; overflow:auto; font-size:11.5px; line-height:1.5;
-  white-space:pre-wrap; word-break:break-all;
-}
-.btn{
-  appearance:none; border:1px solid var(--border); background:var(--accent-dim);
-  color:var(--text); border-radius:7px; padding:7px 13px; font-size:12px; font-family:inherit; cursor:pointer;
-}
-.btn.primary{ background:var(--accent); color:#06180f; border-color:var(--accent); font-weight:700; }
-.btn:disabled{opacity:.5; cursor:not-allowed;}
-.row{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
-input[type="file"]{display:none;}
-.status{font-size:11.5px; color:var(--muted); min-height:16px; padding:0 20px;}
-.status.err{color:var(--err);}
-.status.ok{color:var(--accent);}
-.opts{display:flex; gap:14px; padding:10px 20px; flex-wrap:wrap; font-size:11.5px; color:var(--muted); align-items:center;}
-.opts label{display:flex; gap:5px; align-items:center; cursor:pointer;}
-.opts input[type=range]{width:90px;}
-footer{text-align:center; color:var(--muted); font-size:10.5px; padding:16px;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ObsessionHub Obfuscator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red-900: #2a0000;
+            --red-800: #4a0000;
+            --red-700: #6b0000;
+            --red-600: #8f0000;
+            --red-500: #b30000;
+            --red-400: #d4192a;
+            --red-300: #ff3b4e;
+            --red-glow: rgba(255, 30, 50, 0.55);
+            --bg-0: #07070a;
+            --bg-1: #0d0608;
+            --panel: #140507;
+            --border: #3a0a0d;
+            --text: #f1e4e4;
+            --text-dim: #a58b8c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse 800px 500px at 50% -10%, rgba(179, 0, 0, 0.35), transparent 60%),
+                radial-gradient(ellipse 600px 400px at 100% 100%, rgba(100, 0, 0, 0.25), transparent 60%),
+                var(--bg-0);
+            color: var(--text);
+            font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 900px;
+            background: linear-gradient(180deg, var(--panel), var(--bg-1));
+            padding: 30px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow:
+                0 0 0 1px rgba(255, 40, 60, 0.08),
+                0 20px 60px rgba(0, 0, 0, 0.7),
+                0 0 80px -20px var(--red-glow),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--red-300), var(--red-500), var(--red-300), transparent);
+            box-shadow: 0 0 20px 2px var(--red-glow);
+        }
+
+        h1 {
+            margin: 4px 0 28px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 2.1rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, #ff5f6e, var(--red-500) 60%, var(--red-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 18px var(--red-glow));
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #ff8f99;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            background: #0a0304;
+            color: #ff8f8f;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            margin-bottom: 18px;
+            outline: none;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea::placeholder { color: #5c3a3d; }
+
+        textarea:focus {
+            border-color: var(--red-400);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(212, 25, 42, 0.25), 0 0 20px var(--red-glow);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 150px;
+            padding: 13px 14px;
+            background: #0a0304;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--red-400);
+            box-shadow: 0 0 0 3px rgba(212, 25, 42, 0.25);
+        }
+
+        button {
+            flex: 1;
+            min-width: 140px;
+            padding: 13px;
+            border: 1px solid rgba(255, 90, 100, 0.25);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #fff;
+            background: linear-gradient(180deg, var(--red-400), var(--red-700));
+            box-shadow:
+                0 4px 14px rgba(179, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.35);
+            transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        }
+
+        button:hover {
+            filter: brightness(1.15);
+            transform: translateY(-1px);
+            box-shadow:
+                0 6px 20px rgba(212, 25, 42, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -2px 6px rgba(0, 0, 0, 0.35);
+        }
+
+        button:active { transform: translateY(0); filter: brightness(0.95); }
+
+        .copy-btn { background: linear-gradient(180deg, #c62233, var(--red-900)); }
+        .dl-btn { background: linear-gradient(180deg, #e0273a, var(--red-800)); }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+    </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1>ObsessionHub <span style="color:var(--accent)">// lua obfuscator</span></h1>
-    <div class="tag">string encrypt · ident mangle · opcode-VM wrap · junk injection — nothing leaves your browser</div>
-  </div>
-  <div class="row">
-    <label class="btn" for="file_in">load .lua</label>
-    <input id="file_in" type="file" accept=".lua,.txt">
-    <button class="btn primary" id="run_btn">obfuscate</button>
-  </div>
-</header>
 
-<div class="opts">
-  <label><input type="checkbox" id="opt_strings" checked> encrypt strings</label>
-  <label><input type="checkbox" id="opt_idents" checked> mangle identifiers</label>
-  <label><input type="checkbox" id="opt_vm" checked> VM-wrap statements</label>
-  <label><input type="checkbox" id="opt_junk" checked> junk injection</label>
-  <label>junk density <input type="range" id="junk_amt" min="0" max="10" value="4"></label>
-  <label title="Roblox sandbox disables loadstring/load -- uncheck VM-wrap above when targeting Roblox, string encryption + identifier mangling still work fine there">
-    <input type="checkbox" id="opt_roblox"> targeting roblox (auto-disables VM-wrap)
-  </label>
-</div>
+    <div class="container">
+        <h1>ObsessionHub Obfuscator</h1>
 
-<main>
-  <section class="panel">
-    <div class="bar"><span>source</span><span id="in_count">0 bytes</span></div>
-    <textarea id="src" spellcheck="false">print("hello")</textarea>
-  </section>
-  <section class="panel">
-    <div class="bar">
-      <span>output</span>
-      <div class="row">
-        <span id="out_count">0 bytes</span>
-        <button class="btn" id="copy_btn" disabled>copy</button>
-        <button class="btn" id="dl_btn" disabled>download</button>
-      </div>
+        <label for="inputScript">Input Script (Lua)</label>
+        <textarea id="inputScript" placeholder="Paste your script here..."></textarea>
+
+        <div class="controls">
+            <button onclick="obfuscateScript()">1. Obfuscate</button>
+            <button class="copy-btn" onclick="copyCode()">2. Copy Output</button>
+        </div>
+
+        <label for="outputScript">Obfuscated Output</label>
+        <textarea id="outputScript" placeholder="Your obfuscated code will appear here..." readonly></textarea>
+
+        <div class="controls">
+            <input type="text" id="fileName" value="obsessionhub_script">
+            <button class="dl-btn" onclick="downloadFile()">3. Download as .txt</button>
+        </div>
+
+        <div class="footer-note">ObsessionHub // Local, client-side obfuscation</div>
     </div>
-    <pre id="out">// obfuscated output appears here</pre>
-  </section>
-</main>
-<div class="status" id="status"></div>
-<footer>ObsessionHub · pure JS, runs in-tab, nothing uploaded · re-run same input = different output every time</footer>
 
-<script src="obfuscator.js"></script>
-<script>
-const $ = s => document.querySelector(s);
-const src=$("#src"), out=$("#out"), status=$("#status");
-const runBtn=$("#run_btn"), copyBtn=$("#copy_btn"), dlBtn=$("#dl_btn");
-const inCount=$("#in_count"), outCount=$("#out_count"), fileIn=$("#file_in");
-let lastOutput="";
+    <script>
+        function obfuscateScript() {
+            const input = document.getElementById('inputScript').value;
+            if (!input.trim()) {
+                alert("Please paste a script first.");
+                return;
+            }
 
-const bytes = s => new TextEncoder().encode(s).length;
-const fmt = n => n.toLocaleString() + " bytes";
-function setStatus(msg, kind){ status.textContent=msg; status.className="status"+(kind?" "+kind:""); }
+            // The notification UI is placed inside a non-yielding thread
+            const notifyLua = `task.spawn(function() pcall(function() local TS = game:GetService("TweenService") local CG = game:GetService("CoreGui") local sg = Instance.new("ScreenGui") sg.Name = "ObsessionHubProtect" sg.Parent = CG local f = Instance.new("Frame") f.Size = UDim2.new(0, 320, 0, 50) f.Position = UDim2.new(0.5, -160, 0, -60) f.BackgroundColor3 = Color3.fromRGB(15, 15, 20) f.Parent = sg local uc = Instance.new("UICorner") uc.CornerRadius = UDim.new(0, 6) uc.Parent = f local us = Instance.new("UIStroke") us.Color = Color3.fromRGB(255, 115, 0) us.Thickness = 2 us.Parent = f local img = Instance.new("ImageLabel") img.Size = UDim2.new(0, 30, 0, 30) img.Position = UDim2.new(0, 10, 0.5, -15) img.BackgroundTransparency = 1 img.Image = "rbxassetid://10672728956" img.ImageColor3 = Color3.fromRGB(255, 115, 0) img.Parent = f local txt = Instance.new("TextLabel") txt.Size = UDim2.new(1, -50, 1, 0) txt.Position = UDim2.new(0, 50, 0, 0) txt.BackgroundTransparency = 1 txt.Text = "This script is protected by ObsessionHub" txt.TextColor3 = Color3.fromRGB(255, 255, 255) txt.Font = Enum.Font.GothamBold txt.TextSize = 14 txt.TextXAlignment = Enum.TextXAlignment.Left txt.Parent = f TS:Create(f, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -160, 0, 40)}):Play() task.wait(3.5) local tf = TweenInfo.new(1.5, Enum.EasingStyle.Linear) TS:Create(f, tf, {BackgroundTransparency = 1}):Play() TS:Create(us, tf, {Transparency = 1}):Play() TS:Create(img, tf, {ImageTransparency = 1}):Play() TS:Create(txt, tf, {TextTransparency = 1}):Play() task.wait(1.5) sg:Destroy() end) end)\n`;
 
-src.addEventListener("input", () => inCount.textContent = fmt(bytes(src.value)));
-inCount.textContent = fmt(bytes(src.value));
+            // Merge the notification logic with the user's script
+            const combinedScript = notifyLua + "\n" + input;
 
-fileIn.addEventListener("change", async () => {
-  const f = fileIn.files[0]; if(!f) return;
-  src.value = await f.text();
-  inCount.textContent = fmt(bytes(src.value));
-});
+            let byteList = [];
+            for (let i = 0; i < combinedScript.length; i++) {
+                byteList.push(combinedScript.charCodeAt(i));
+            }
+            const byteString = byteList.join(',');
 
-function run(){
-  const source = src.value;
-  if(!source.trim()){ setStatus("nothing to obfuscate","err"); return; }
-  try{
-    const t0 = performance.now();
-    const roblox = $("#opt_roblox").checked;
-    const result = LuaObf.obfuscate(source, {
-      strings: $("#opt_strings").checked,
-      idents:  $("#opt_idents").checked,
-      vmwrap:  roblox ? false : $("#opt_vm").checked, // loadstring is sandbox-disabled on roblox
-      junk:    $("#opt_junk").checked,
-      junkAmt: parseInt($("#junk_amt").value, 10),
-    });
-    lastOutput = result;
-    out.textContent = result;
-    outCount.textContent = fmt(bytes(result));
-    copyBtn.disabled = false; dlBtn.disabled = false;
-    setStatus(`done in ${(performance.now()-t0).toFixed(1)}ms`, "ok");
-  } catch(e){
-    out.textContent = "// error: " + e.message;
-    setStatus(e.message, "err");
-  }
-}
+            // Clean wrapper - no plain text UI code visible
+            const obsessionHubHeader = `-- obsessionhub\n`;
+            const luaWrapper = `local _e = {${byteString}}\n` +
+                               `local _t = {}\n` +
+                               `for i, v in ipairs(_e) do _t[i] = string.char(v) end\n` +
+                               `local _s = table.concat(_t)\n` +
+                               `local _f, _err = loadstring(_s)\n` +
+                               `if _f then\n` +
+                               `    _f()\n` +
+                               `else\n` +
+                               `    error("ObsessionHub Execution Failed: " .. tostring(_err))\n` +
+                               `end`;
 
-runBtn.addEventListener("click", run);
-copyBtn.addEventListener("click", async () => {
-  try{ await navigator.clipboard.writeText(lastOutput); setStatus("copied","ok"); }
-  catch{ setStatus("clipboard blocked, select manually","err"); }
-});
-dlBtn.addEventListener("click", () => {
-  const blob = new Blob([lastOutput], {type:"text/plain"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href=url; a.download="obfuscated.lua"; a.click();
-  URL.revokeObjectURL(url);
-});
-document.addEventListener("keydown", e => { if((e.ctrlKey||e.metaKey)&&e.key==="Enter") run(); });
-</script>
+            document.getElementById('outputScript').value = obsessionHubHeader + luaWrapper;
+        }
+
+        function copyCode() {
+            const outputText = document.getElementById('outputScript');
+            if (!outputText.value) return;
+
+            outputText.select();
+            outputText.setSelectionRange(0, 999999);
+            document.execCommand("copy");
+            alert("Copied to clipboard!");
+        }
+
+        function downloadFile() {
+            const outputText = document.getElementById('outputScript').value;
+            let fileName = document.getElementById('fileName').value.trim();
+
+            if (!outputText) {
+                alert("Please obfuscate a script first.");
+                return;
+            }
+            if (!fileName) {
+                fileName = "obsessionhub_script";
+            }
+            if (!fileName.endsWith('.txt') && !fileName.endsWith('.lua')) {
+                fileName += '.txt';
+            }
+
+            const blob = new Blob([outputText], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+
+            a.style.display = 'none';
+            a.href = url;
+            a.download = fileName;
+
+            document.body.appendChild(a);
+            a.click();
+
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    </script>
+
 </body>
 </html>

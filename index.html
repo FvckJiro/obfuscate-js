@@ -1,0 +1,175 @@
+<!-- lang: html/css/js | file: index.html | runtime: browser, static | target: client-side lua obfuscator, netlify-ready -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>lua obfuscator // client-side</title>
+<style>
+:root{
+  --bg:#0a0c0f; --panel:#111419; --border:#232832; --text:#e7eaee;
+  --muted:#808894; --accent:#56e39f; --accent-dim:#16362a; --err:#ff5d6c; --warn:#e8b339;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f3f5f7; --panel:#ffffff; --border:#dde1e6; --text:#15181b;
+    --muted:#5c6570; --accent:#0e9d63; --accent-dim:#dcf5e9; --err:#c62828; --warn:#9a6c00;
+  }
+}
+:root[data-theme="dark"]{ color-scheme: dark; }
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:ui-monospace,Consolas,Menlo,monospace;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);}
+header{
+  position:relative; z-index:5; padding:16px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  padding-top:calc(16px + env(safe-area-inset-top,0px));
+}
+header h1{font-size:15px; margin:0;}
+header .tag{color:var(--muted); font-size:11.5px;}
+main{
+  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  padding:14px 20px 20px; max-width:1400px; margin:0 auto;
+}
+@media (max-width:860px){ main{grid-template-columns:1fr;} }
+.panel{
+  background:var(--panel); border:1px solid var(--border); border-radius:10px;
+  display:flex; flex-direction:column; min-height:340px; overflow:hidden;
+}
+.panel .bar{
+  padding:8px 12px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; font-size:11.5px; color:var(--muted);
+}
+textarea{
+  flex:1; width:100%; border:0; outline:0; resize:none; background:transparent;
+  color:var(--text); padding:14px; font-family:inherit; font-size:12.5px; line-height:1.5;
+}
+pre{
+  flex:1; margin:0; padding:14px; overflow:auto; font-size:11.5px; line-height:1.5;
+  white-space:pre-wrap; word-break:break-all;
+}
+.btn{
+  appearance:none; border:1px solid var(--border); background:var(--accent-dim);
+  color:var(--text); border-radius:7px; padding:7px 13px; font-size:12px; font-family:inherit; cursor:pointer;
+}
+.btn.primary{ background:var(--accent); color:#06180f; border-color:var(--accent); font-weight:700; }
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+.row{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+input[type="file"]{display:none;}
+.status{font-size:11.5px; color:var(--muted); min-height:16px; padding:0 20px;}
+.status.err{color:var(--err);}
+.status.ok{color:var(--accent);}
+.opts{display:flex; gap:14px; padding:10px 20px; flex-wrap:wrap; font-size:11.5px; color:var(--muted); align-items:center;}
+.opts label{display:flex; gap:5px; align-items:center; cursor:pointer;}
+.opts input[type=range]{width:90px;}
+footer{text-align:center; color:var(--muted); font-size:10.5px; padding:16px;}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>lua obfuscator <span style="color:var(--accent)">// client-side</span></h1>
+    <div class="tag">string encrypt · ident mangle · opcode-VM wrap · junk injection — nothing leaves your browser</div>
+  </div>
+  <div class="row">
+    <label class="btn" for="file_in">load .lua</label>
+    <input id="file_in" type="file" accept=".lua,.txt">
+    <button class="btn primary" id="run_btn">obfuscate</button>
+  </div>
+</header>
+
+<div class="opts">
+  <label><input type="checkbox" id="opt_strings" checked> encrypt strings</label>
+  <label><input type="checkbox" id="opt_idents" checked> mangle identifiers</label>
+  <label><input type="checkbox" id="opt_vm" checked> VM-wrap statements</label>
+  <label><input type="checkbox" id="opt_junk" checked> junk injection</label>
+  <label>junk density <input type="range" id="junk_amt" min="0" max="10" value="4"></label>
+</div>
+
+<main>
+  <section class="panel">
+    <div class="bar"><span>source</span><span id="in_count">0 bytes</span></div>
+    <textarea id="src" spellcheck="false">print("hello")</textarea>
+  </section>
+  <section class="panel">
+    <div class="bar">
+      <span>output</span>
+      <div class="row">
+        <span id="out_count">0 bytes</span>
+        <button class="btn" id="copy_btn" disabled>copy</button>
+        <button class="btn" id="dl_btn" disabled>download</button>
+      </div>
+    </div>
+    <pre id="out">// obfuscated output appears here</pre>
+  </section>
+</main>
+<div class="status" id="status"></div>
+<footer>pure JS, runs in-tab — safe as a static Netlify site · re-run same input = different output every time</footer>
+
+<script src="obfuscator.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const src=$("#src"), out=$("#out"), status=$("#status");
+const runBtn=$("#run_btn"), copyBtn=$("#copy_btn"), dlBtn=$("#dl_btn");
+const inCount=$("#in_count"), outCount=$("#out_count"), fileIn=$("#file_in");
+let lastOutput="";
+
+const bytes = s => new TextEncoder().encode(s).length;
+const fmt = n => n.toLocaleString() + " bytes";
+function setStatus(msg, kind){ status.textContent=msg; status.className="status"+(kind?" "+kind:""); }
+
+src.addEventListener("input", () => inCount.textContent = fmt(bytes(src.value)));
+inCount.textContent = fmt(bytes(src.value));
+
+fileIn.addEventListener("change", async () => {
+  const f = fileIn.files[0]; if(!f) return;
+  src.value = await f.text();
+  inCount.textContent = fmt(bytes(src.value));
+});
+
+function run(){
+  const source = src.value;
+  if(!source.trim()){ setStatus("nothing to obfuscate","err"); return; }
+  try{
+    const t0 = performance.now();
+    const result = LuaObf.obfuscate(source, {
+      strings: $("#opt_strings").checked,
+      idents:  $("#opt_idents").checked,
+      vmwrap:  $("#opt_vm").checked,
+      junk:    $("#opt_junk").checked,
+      junkAmt: parseInt($("#junk_amt").value, 10),
+    });
+    lastOutput = result;
+    out.textContent = result;
+    outCount.textContent = fmt(bytes(result));
+    copyBtn.disabled = false; dlBtn.disabled = false;
+    setStatus(`done in ${(performance.now()-t0).toFixed(1)}ms`, "ok");
+  } catch(e){
+    out.textContent = "// error: " + e.message;
+    setStatus(e.message, "err");
+  }
+}
+
+runBtn.addEventListener("click", run);
+copyBtn.addEventListener("click", async () => {
+  try{ await navigator.clipboard.writeText(lastOutput); setStatus("copied","ok"); }
+  catch{ setStatus("clipboard blocked, select manually","err"); }
+});
+dlBtn.addEventListener("click", () => {
+  const blob = new Blob([lastOutput], {type:"text/plain"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url; a.download="obfuscated.lua"; a.click();
+  URL.revokeObjectURL(url);
+});
+document.addEventListener("keydown", e => { if((e.ctrlKey||e.metaKey)&&e.key==="Enter") run(); });
+</script>
+</body>
+</html>

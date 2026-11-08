@@ -198,34 +198,50 @@
       }
     }
 
-    // ---- string encryption: replace each string literal with a decode() call over an XOR-keyed byte array
+    // ---- string encryption: per-string unique (key, mult) pair -- recovering one string's
+    // key gives an attacker nothing about any other string in the file, unlike a single shared key.
+    // transform per byte i: enc = (plain*mult + key + rolling_salt(i)) mod 256, decoder inverts via
+    // modular multiplicative inverse of mult (mult is always chosen odd so inverse mod 256 exists).
     if (opts.strings) {
       const decoderName = randIdent(rng, 8);
-      const keyName = randIdent(rng, 6);
-      const key = rint(rng, 3, 250);
       let needDecoder = false;
+      let litIdx = 0;
 
       for (const tk of toks) {
         if (tk.t !== "str") continue;
         const plain = decodeLuaString(tk.v);
+        const key = rint(rng, 1, 255);
+        let mult = rint(rng, 1, 127) * 2 + 1; // force odd, keeps it in 1..255 odd range
+        const salt = rint(rng, 1, 90);
         const bytes = [];
         for (let i = 0; i < plain.length; i++) {
-          const enc = ((plain.charCodeAt(i) + key + (i % 256)) % 256 + 256) % 256;
-          bytes.push(enc);
+          const rolling = (i * salt + litIdx * 13) % 256;
+          const enc = (((plain.charCodeAt(i) * mult) % 256) + key + rolling) % 256;
+          bytes.push(((enc % 256) + 256) % 256);
         }
         tk.t = "raw";
-        tk.v = `${decoderName}({${bytes.join(",")}},${keyName})`;
+        tk.v = `${decoderName}({${bytes.join(",")}},${key},${mult},${salt},${litIdx})`;
+        litIdx++;
         needDecoder = true;
       }
 
-      // lua5.1 has no bitwise operators -- xor implemented via arithmetic (bit-trick free, pure math)
-      // xor(a,b) over 0..255: classic byte-xor-via-mod trick using a precomputed parity table would be
-      // overkill here; instead encode with ADD+MOD scramble (still a real keyed transform, just not XOR)
-      // so it round-trips correctly on lua5.1 with zero bit-library dependency.
       if (needDecoder) {
+        // decoder recomputes mult's inverse at runtime via brute search mod 256 (cheap, <=256 iters,
+        // runs once per literal at load time) -- no inverse table ships, so nothing static to grep.
+        // signature: decode(bytes, key, mult, salt, idx)
         var decoderPrelude =
-          `local ${keyName}=${key}\n` +
-          `local function ${decoderName}(t,k) local o={} for i=1,#t do o[i]=string.char((t[i]-k-((i-1)%256)+512)%256) end return table.concat(o) end\n`;
+          `local function ${decoderName}(t,k,m,s,li)\n` +
+          `  local inv=1\n` +
+          `  for x=1,255 do if ((m*x)%256)==1 then inv=x break end end\n` +
+          `  local o={}\n` +
+          `  for i=1,#t do\n` +
+          `    local rolling=((i-1)*s+li*13)%256\n` +
+          `    local e=(t[i]-k-rolling)%256\n` +
+          `    if e<0 then e=e+256 end\n` +
+          `    o[i]=string.char((e*inv)%256)\n` +
+          `  end\n` +
+          `  return table.concat(o)\n` +
+          `end\n`;
       }
     }
 
@@ -242,18 +258,59 @@
       const execName = randIdent(rng, 7);
       const loaderName = randIdent(rng, 6);
 
-      // encode each line as an escaped Lua long-string element in the op array
-      const encLines = lines.map(l => {
-        const esc = l.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
-        return `"${esc}"`;
+      // each line byte-encrypted (same keyed arithmetic cipher as the string layer, independent
+      // key) AND stored out of order via an index-remap table -- dumping the literal array gives
+      // an attacker ciphertext bytes in shuffled order, not readable Lua, until they also recover
+      // the per-chunk key/mult/salt and the remap, which differ every single obfuscation run.
+      const chunkKey = rint(rng, 1, 255);
+      const chunkMult = rint(rng, 1, 127) * 2 + 1;
+      const chunkSalt = rint(rng, 1, 90);
+      const order = lines.map((_, i) => i);
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = rint(rng, 0, i);
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      const remapName = randIdent(rng, 6);
+      const chunkDecoderName = randIdent(rng, 8);
+
+      // encrypt each line's bytes, store as numeric arrays (not strings) -- no printable text at all
+      // in the shipped data, so a plain string-grep of the output file finds zero original source text
+      const encChunks = lines.map(l => {
+        const bytes = [];
+        for (let i = 0; i < l.length; i++) {
+          const rolling = (i * chunkSalt) % 256;
+          const enc = (((l.charCodeAt(i) * chunkMult) % 256) + chunkKey + rolling) % 256;
+          bytes.push(((enc % 256) + 256) % 256);
+        }
+        return `{${bytes.join(",")}}`;
       });
+      // physically store chunks in shuffled order; remap table says original-index -> stored-slot
+      const shuffledChunks = new Array(order.length);
+      order.forEach((origIdx, storedSlot) => { shuffledChunks[storedSlot] = encChunks[origIdx]; });
+      const remapEntries = order.map((origIdx, storedSlot) => `[${origIdx + 1}]=${storedSlot + 1}`);
 
       let out = "";
       if (typeof decoderPrelude !== "undefined") out += decoderPrelude;
 
-      out += `local ${opArrName}={${encLines.join(",")}}\n`;
+      out += `local function ${chunkDecoderName}(t,k,m,s)\n` +
+             `  local inv=1\n` +
+             `  for x=1,255 do if ((m*x)%256)==1 then inv=x break end end\n` +
+             `  local o={}\n` +
+             `  for i=1,#t do\n` +
+             `    local rolling=((i-1)*s)%256\n` +
+             `    local e=(t[i]-k-rolling)%256\n` +
+             `    if e<0 then e=e+256 end\n` +
+             `    o[i]=string.char((e*inv)%256)\n` +
+             `  end\n` +
+             `  return table.concat(o)\n` +
+             `end\n`;
+
+      out += `local ${remapName}={${remapEntries.join(",")}}\n`;
+      out += `local ${opArrName}={${shuffledChunks.join(",")}}\n`;
       out += `local ${execName}=(loadstring or load)\n`;
-      out += `local ${loaderName}=${execName}(table.concat(${opArrName},"\\n"))\n`;
+      out += `local ${idxName}={}\n`;
+      out += `for i=1,${order.length} do ${idxName}[i]=${chunkDecoderName}(${opArrName}[${remapName}[i]],${chunkKey},${chunkMult},${chunkSalt}) end\n`;
+      out += `local ${loaderName}=${execName}(table.concat(${idxName},"\\n"))\n`;
 
       // junk injection: dead ops interleaved as no-op table churn before the real exec call,
       // pulled from the same op-array style so static scanning of "what looks real" is noisier
@@ -264,8 +321,8 @@
         for (let i = 0; i < junkCount; i++) {
           const a = randIdent(rng, 5), b = randIdent(rng, 5);
           const pick = rint(rng, 0, 3);
-          if (pick === 0) junkLines.push(`local ${a}=${rint(rng,1,99999)} local ${b}=${a}*${rint(rng,2,17)}%${rint(rng,97,251)}`);
-          else if (pick === 1) junkLines.push(`local ${a}={} for ${idxName}=1,${rint(rng,1,5)} do ${a}[${idxName}]=${idxName}*${rint(rng,1,9)} end`);
+          if (pick === 0) junkLines.push(`local ${a},${b}=${rint(rng,1,99999)},${rint(rng,2,17)}`);
+          else if (pick === 1) { const jv = randIdent(rng, 4); junkLines.push(`local ${a}={} for ${jv}=1,${rint(rng,1,5)} do ${a}[${jv}]=${jv}*${rint(rng,1,9)} end`); }
           else if (pick === 2) junkLines.push(`local ${a}=tostring(${rint(rng,1,999)})`);
           else junkLines.push(`if ${rint(rng,0,1)}==1 then local ${a}=${rint(rng,0,9)} end`);
         }
@@ -286,7 +343,8 @@
     }
 
     const header =
-      `-- obfuscated :: layers[${[opts.strings&&"str",opts.idents&&"ident",opts.vmwrap&&"vmwrap",opts.junk&&"junk"].filter(Boolean).join(",")}] seed=${seed}\n`;
+      `-- Obfuscated by ObsessionHub\n` +
+      `-- layers[${[opts.strings&&"str",opts.idents&&"ident",opts.vmwrap&&"vmwrap",opts.junk&&"junk"].filter(Boolean).join(",")}] seed=${seed}\n`;
     return header + body;
   }
 

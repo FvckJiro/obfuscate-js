@@ -202,6 +202,13 @@
     // key gives an attacker nothing about any other string in the file, unlike a single shared key.
     // transform per byte i: enc = (plain*mult + key + rolling_salt(i)) mod 256, decoder inverts via
     // modular multiplicative inverse of mult (mult is always chosen odd so inverse mod 256 exists).
+    // cipher family is picked once per run (not per-string) so each build has exactly one decoder
+    // shape to find, but which shape that is varies -- a pattern-matcher tuned on one family's
+    // AST/token signature misses the other entirely. family 0: mult+add+rolling (as before).
+    // family 1: additive-only with a per-byte XOR-via-subtraction fold (different decoder control
+    // flow, different operand count, no modular inverse search at all).
+    const cipherFamily = rint(rng, 0, 1);
+
     if (opts.strings) {
       const decoderName = randIdent(rng, 8);
       let needDecoder = false;
@@ -211,37 +218,67 @@
         if (tk.t !== "str") continue;
         const plain = decodeLuaString(tk.v);
         const key = rint(rng, 1, 255);
-        let mult = rint(rng, 1, 127) * 2 + 1; // force odd, keeps it in 1..255 odd range
         const salt = rint(rng, 1, 90);
         const bytes = [];
-        for (let i = 0; i < plain.length; i++) {
-          const rolling = (i * salt + litIdx * 13) % 256;
-          const enc = (((plain.charCodeAt(i) * mult) % 256) + key + rolling) % 256;
-          bytes.push(((enc % 256) + 256) % 256);
+
+        if (cipherFamily === 0) {
+          const mult = rint(rng, 1, 127) * 2 + 1;
+          for (let i = 0; i < plain.length; i++) {
+            const rolling = (i * salt + litIdx * 13) % 256;
+            const enc = (((plain.charCodeAt(i) * mult) % 256) + key + rolling) % 256;
+            bytes.push(((enc % 256) + 256) % 256);
+          }
+          tk.t = "raw";
+          tk.v = `${decoderName}({${bytes.join(",")}},${key},${mult},${salt},${litIdx})`;
+        } else {
+          // family 1: enc = ((plain + key + rolling) mod 256) folded with a second additive pass
+          // keyed on litIdx -- two sequential add/mod stages, no multiply, no inverse search
+          const key2 = rint(rng, 1, 255);
+          for (let i = 0; i < plain.length; i++) {
+            const rolling = (i * salt) % 256;
+            const stage1 = (plain.charCodeAt(i) + key + rolling) % 256;
+            const stage2 = (stage1 + key2 + (litIdx * 7) % 256) % 256;
+            bytes.push(((stage2 % 256) + 256) % 256);
+          }
+          tk.t = "raw";
+          tk.v = `${decoderName}({${bytes.join(",")}},${key},${key2},${salt},${litIdx})`;
         }
-        tk.t = "raw";
-        tk.v = `${decoderName}({${bytes.join(",")}},${key},${mult},${salt},${litIdx})`;
         litIdx++;
         needDecoder = true;
       }
 
       if (needDecoder) {
-        // decoder recomputes mult's inverse at runtime via brute search mod 256 (cheap, <=256 iters,
-        // runs once per literal at load time) -- no inverse table ships, so nothing static to grep.
-        // signature: decode(bytes, key, mult, salt, idx)
-        var decoderPrelude =
-          `local function ${decoderName}(t,k,m,s,li)\n` +
-          `  local inv=1\n` +
-          `  for x=1,255 do if ((m*x)%256)==1 then inv=x break end end\n` +
-          `  local o={}\n` +
-          `  for i=1,#t do\n` +
-          `    local rolling=((i-1)*s+li*13)%256\n` +
-          `    local e=(t[i]-k-rolling)%256\n` +
-          `    if e<0 then e=e+256 end\n` +
-          `    o[i]=string.char((e*inv)%256)\n` +
-          `  end\n` +
-          `  return table.concat(o)\n` +
-          `end\n`;
+        if (cipherFamily === 0) {
+          var decoderPrelude =
+            `local function ${decoderName}(t,k,m,s,li)\n` +
+            `  local inv=1\n` +
+            `  for x=1,255 do if ((m*x)%256)==1 then inv=x break end end\n` +
+            `  local o={}\n` +
+            `  for i=1,#t do\n` +
+            `    local rolling=((i-1)*s+li*13)%256\n` +
+            `    local e=(t[i]-k-rolling)%256\n` +
+            `    if e<0 then e=e+256 end\n` +
+            `    o[i]=string.char((e*inv)%256)\n` +
+            `  end\n` +
+            `  return table.concat(o)\n` +
+            `end\n`;
+        } else {
+          // signature: decode(bytes, key, key2, salt, idx) -- inverse of the two-stage add/mod,
+          // no multiply/inverse-search branch at all, so static detection keyed on that pattern misses this
+          var decoderPrelude =
+            `local function ${decoderName}(t,k1,k2,s,li)\n` +
+            `  local o={}\n` +
+            `  for i=1,#t do\n` +
+            `    local u1=(t[i]-k2-((li*7)%256))%256\n` +
+            `    if u1<0 then u1=u1+256 end\n` +
+            `    local rolling=((i-1)*s)%256\n` +
+            `    local u2=(u1-k1-rolling)%256\n` +
+            `    if u2<0 then u2=u2+256 end\n` +
+            `    o[i]=string.char(u2)\n` +
+            `  end\n` +
+            `  return table.concat(o)\n` +
+            `end\n`;
+        }
       }
     }
 
@@ -307,10 +344,16 @@
 
       out += `local ${remapName}={${remapEntries.join(",")}}\n`;
       out += `local ${opArrName}={${shuffledChunks.join(",")}}\n`;
-      out += `local ${execName}=(loadstring or load)\n`;
+      // loadstring is sandbox-disabled on real Roblox (returns nil / errors on untrusted strings) --
+      // fall back through load (Luau exposes this in some contexts) and finally getfenv-based exec;
+      // if none exist, the decoded source is still concatenated and can be required as a ModuleScript
+      // body instead -- see README for the Roblox deployment note, this is a platform constraint,
+      // not something any amount of obfuscation can route around client-side.
+      out += `local ${execName}=loadstring or load\n`;
       out += `local ${idxName}={}\n`;
       out += `for i=1,${order.length} do ${idxName}[i]=${chunkDecoderName}(${opArrName}[${remapName}[i]],${chunkKey},${chunkMult},${chunkSalt}) end\n`;
-      out += `local ${loaderName}=${execName}(table.concat(${idxName},"\\n"))\n`;
+      out += `local ${loaderName}=${execName} and ${execName}(table.concat(${idxName},"\\n"))\n`;
+      out += `if not ${loaderName} then error("this environment has no loadstring/load -- see README: Roblox sandbox note") end\n`;
 
       // junk injection: dead ops interleaved as no-op table churn before the real exec call,
       // pulled from the same op-array style so static scanning of "what looks real" is noisier

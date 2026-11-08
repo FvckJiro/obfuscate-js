@@ -91,6 +91,9 @@ footer{text-align:center; color:var(--muted); font-size:10.5px; padding:16px;}
   <label><input type="checkbox" id="opt_vm" checked> VM-wrap statements</label>
   <label><input type="checkbox" id="opt_junk" checked> junk injection</label>
   <label>junk density <input type="range" id="junk_amt" min="0" max="10" value="4"></label>
+  <label title="Roblox sandbox disables loadstring/load -- uncheck VM-wrap above when targeting Roblox, string encryption + identifier mangling still work fine there">
+    <input type="checkbox" id="opt_roblox"> targeting roblox (auto-disables VM-wrap)
+  </label>
 </div>
 
 <main>
@@ -139,10 +142,11 @@ function run(){
   if(!source.trim()){ setStatus("nothing to obfuscate","err"); return; }
   try{
     const t0 = performance.now();
+    const roblox = $("#opt_roblox").checked;
     const result = LuaObf.obfuscate(source, {
       strings: $("#opt_strings").checked,
       idents:  $("#opt_idents").checked,
-      vmwrap:  $("#opt_vm").checked,
+      vmwrap:  roblox ? false : $("#opt_vm").checked, // loadstring is sandbox-disabled on roblox
       junk:    $("#opt_junk").checked,
       junkAmt: parseInt($("#junk_amt").value, 10),
     });

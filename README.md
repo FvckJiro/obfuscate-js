@@ -1,64 +1,42 @@
-# lua obfuscator — client-side, netlify-ready
+# BlackClover site: Vercel setup
 
-pure JS, no backend, no build step. drag this folder onto Netlify (or any
-static host) and it works immediately — nothing to install, no lua runtime
-needed server-side because there IS no server.
+Files (keep this layout, all in the project root):
 
-## deploy on netlify
-drag the whole `netobf/` folder onto netlify.com/drop, or:
-```
-git init && git add . && git commit -m init
-```
-push to GitHub, then Netlify → Add new site → import from Git → build
-command: (leave blank) → publish directory: `/` → deploy.
+    index.html
+    asta.gif
+    package.json
+    api/bc.js
 
-## layers
-- **string encryption** — every string literal replaced with a keyed
-  byte-array + inline decoder (`(v+k+i)%256` scramble, pure arithmetic,
-  runs on lua5.1 with zero bitlib dependency)
-- **identifier mangling** — every non-reserved identifier renamed to
-  randomized garbage, consistent across all its uses in the file
-- **VM-wrap** — the whole processed script is split into line-chunks,
-  stored as a quoted string array, and executed via `loadstring`/`load`
-  at runtime — so the shipped file is an interpreter stub + opaque data,
-  not readable Lua
-- **junk injection** — dead no-op statements scattered before the real
-  payload, density adjustable 0–10 in the UI
+## Deploy
+1. Put these files in a GitHub repo (index.html at the root of the repo, not inside another folder).
+2. On vercel.com: Add New > Project > import the repo. Framework preset: Other. Leave Build Command and Output Directory empty. Deploy.
 
-seed is randomized per run (`Date.now() ^ random`), so obfuscating the
-same input twice never produces byte-identical output.
+## Turn on community posting (required for Scripts and Admin)
+1. Vercel project > Storage > Create Database > Upstash Redis (free plan). Connect it to the project. This adds the KV_REST_API_URL and KV_REST_API_TOKEN variables.
+2. Project > Settings > Environment Variables > add ADMIN_PASSWORD with a long password only you know.
+3. Deployments > Redeploy.
 
-## roblox deployment
-Roblox's Luau sandbox disables `loadstring`/`load` for untrusted/dynamic code
-in both LocalScripts and Scripts — the VM-wrap layer depends on that function
-existing, so **check "targeting roblox" in the UI** before obfuscating. This
-auto-disables VM-wrap and ships string encryption + identifier mangling only,
-both of which are pure Luau with no dynamic exec dependency — fully supported
-on real Roblox clients/servers, ModuleScripts included.
+## Use it
+- Admin panel: yoursite.vercel.app/#admin (or the Admin link in the footer).
+- Approve or reject new posts, verify authors, delete posts.
+- Read every script before you approve it.
 
-If you obfuscate with VM-wrap left on and paste the result into Roblox, it
-will throw `this environment has no loadstring/load` at runtime — that's the
-generated code failing loudly instead of silently doing nothing, which is
-correct behavior, not a bug to report.
+## Edit in index.html (CONFIG block near the bottom)
+- discord, keyLink (your key checkpoint link), buyLink, freePrice, premiumPrice
+- verifyViews / verifyLikes: the bar the admin panel uses to flag authors for Verified
 
-## anti-pattern-matching
-Two independent cipher families (multiplicative+rolling vs two-stage
-additive) are randomly selected once per obfuscation run — same obfuscator,
-different decoder shape every time, so there's no single fixed template for
-a tool (AI or otherwise) to learn and generalize across every output you
-produce. Combined with unique per-literal keys, shuffled+encrypted chunk
-storage (when VM-wrap is on), and randomized identifier names/declaration
-styles, no two runs on the same input are byte-identical.
+## Accounts, profiles, dashboard
+- People create an account at /#login, then post scripts, edit their profile (picture, banner, bio, accent color) and manage posts at /#dashboard.
+- Public profiles live at /#u/USERNAME.
+- Names that posted before accounts existed can log in with their old name and password.
+- Login, register and admin attempts are rate limited per IP.
 
-## known limits (be straight with yourself about this)
-- identifier renaming is regex/token-based, not a full AST parse — it
-  skips `foo.bar`/`foo:bar` field access correctly, but table-constructor
-  keys (`{foo = 1}`) are a known blind spot: if `foo` as a bare key
-  collides with a renamed local elsewhere in the same file, test your
-  output before shipping it. always run obfuscated output through the
-  target runtime before relying on it.
-- this raises the bar against casual script-kiddie copy-paste theft and
-  static string-grep. it does not stop a determined reverse engineer with
-  a debugger attached to a live loadstring call — nothing client-side-only
-  does. for real protection of logic you can't let the client see at all
-  (loot tables, anti-cheat checks), that has to live server-side instead.
+## Key checkpoint
+- /#getkey runs a server-timed checkpoint: open each link, wait out the timer, continue. After the last step the server issues a key like BC-XXXX-XXXX-XXXX.
+- Optional env vars: CHECKPOINT_STEPS (default 3, keep CONFIG.checkpoints the same length), CHECKPOINT_WAIT seconds per step (default 12), KEY_HOURS (default 24).
+- Verify a key from your script loader: GET /api/bc?a=check&k=KEY returns {"valid":true,"exp":...} or {"valid":false}.
+- The timer cannot prove someone really finished a third-party link. Keep that in mind for ad revenue.
+
+## Check
+- yoursite.vercel.app/asta.gif should show the image. If it is a 404, the file is not in the project root.
+- yoursite.vercel.app/api/bc?a=list should return {"posts":[]} once Redis is connected.

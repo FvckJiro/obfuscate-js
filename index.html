@@ -1,307 +1,1101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ObsessionHub Obfuscator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --red-900: #2a0000;
-            --red-800: #4a0000;
-            --red-700: #6b0000;
-            --red-600: #8f0000;
-            --red-500: #b30000;
-            --red-400: #d4192a;
-            --red-300: #ff3b4e;
-            --red-glow: rgba(255, 30, 50, 0.55);
-            --bg-0: #07070a;
-            --bg-1: #0d0608;
-            --panel: #140507;
-            --border: #3a0a0d;
-            --text: #f1e4e4;
-            --text-dim: #a58b8c;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlackClover | Anti-magic scripts</title>
+<meta name="description" content="Roblox scripts, a free key system and a premium tier.">
+<meta name="theme-color" content="#050505">
+<meta property="og:title" content="BlackClover">
+<meta property="og:description" content="Anti-magic Roblox scripts. Free with a key, stronger with premium.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☘</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+@property --acc{syntax:"<color>";inherits:true;initial-value:#d1121b}
+:root{
+  --ink:#050505; --panel:#0e0e0e; --line:#2a2a2a; --paper:#f3f1ec; --mute:#9a9690;
+  --acc:#d1121b; --gold:#e0a93b; transition:--acc 1.2s ease;
+  --display:"Anton","Impact","Arial Narrow",sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-padding-top:70px}
+body{background:var(--ink);color:var(--paper);font:400 17px/1.6 var(--body);min-height:100vh;
+  background-image:radial-gradient(#ffffff0d 1px,transparent 1.4px);background-size:9px 9px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 22px}
 
-        * { box-sizing: border-box; }
+/* nav */
+header{position:sticky;top:0;z-index:20;background:var(--ink);border-bottom:3px solid var(--paper)}
+nav{display:flex;align-items:center;gap:28px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font:400 26px/1 var(--display);letter-spacing:.04em;text-decoration:none;flex:none}
+.brand svg{width:34px;height:34px}
+.tabs{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{font:400 19px/1 var(--display);letter-spacing:.05em;text-decoration:none;padding:21px 14px 18px;border-bottom:5px solid transparent;color:var(--mute);white-space:nowrap}
+.tabs a:hover{color:var(--paper)}
+.tabs a[aria-current="page"]{color:var(--paper);border-bottom-color:var(--acc)}
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background:
-                radial-gradient(ellipse 800px 500px at 50% -10%, rgba(179, 0, 0, 0.35), transparent 60%),
-                radial-gradient(ellipse 600px 400px at 100% 100%, rgba(100, 0, 0, 0.25), transparent 60%),
-                var(--bg-0);
-            color: var(--text);
-            font-family: 'Rajdhani', 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-        }
+/* pages */
+main>section{display:none}
+main>section.on{display:block}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:.98;letter-spacing:.015em}
+h2{font-size:clamp(40px,7vw,72px);margin-bottom:14px}
+.lede{color:var(--mute);max-width:56ch}
+.page{padding:64px 0 90px}
 
-        .container {
-            width: 95%;
-            max-width: 900px;
-            background: linear-gradient(180deg, var(--panel), var(--bg-1));
-            padding: 30px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            box-shadow:
-                0 0 0 1px rgba(255, 40, 60, 0.08),
-                0 20px 60px rgba(0, 0, 0, 0.7),
-                0 0 80px -20px var(--red-glow),
-                inset 0 1px 0 rgba(255, 255, 255, 0.03);
-            position: relative;
-            overflow: hidden;
-        }
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:3px solid var(--paper)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1fr;gap:30px;align-items:center;min-height:560px;padding-top:50px;padding-bottom:50px}
+.hero h1{font-size:clamp(54px,9.5vw,124px);text-transform:uppercase}
+.hero h1 span{display:block}
+.hero h1 .r{color:var(--acc);-webkit-text-stroke:0}
+.hero p{margin:22px 0 30px;color:#cfcbc4;max-width:44ch;font-size:19px}
+.btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;font:400 21px/1 var(--display);letter-spacing:.05em;text-decoration:none;padding:15px 26px 13px;border:3px solid var(--paper);background:var(--paper);color:var(--ink);cursor:pointer;transition:transform .12s, background .12s,color .12s;transform:skewX(-8deg)}
+.btn:hover{background:var(--acc);border-color:var(--acc);color:var(--paper)}
+.btn:active{transform:skewX(-8deg) translateY(2px)}
+.btn.ghost{background:transparent;color:var(--paper)}
+.btn.ghost:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.btn.sm{font-size:17px;padding:11px 18px 9px}
+.emblem{position:relative;display:grid;place-items:center;transform:translate(var(--px,0px),var(--py,0px));transition:transform .25s ease-out}
+.emblem::before{content:"";position:absolute;width:78%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--acc) 60%,transparent),color-mix(in srgb,var(--acc) 25%,transparent) 45%,transparent 70%);filter:blur(18px);animation:aura 3.2s ease-in-out infinite alternate}
+.emblem{filter:drop-shadow(0 0 22px color-mix(in srgb,var(--acc) 50%,transparent))}
+.emblem img{position:relative;display:block;width:100%;max-width:540px;height:auto;clip-path:polygon(8% 0,100% 0,92% 100%,0 100%)}
+.emblem svg{position:relative;width:min(100%,430px);height:auto;filter:drop-shadow(0 0 14px color-mix(in srgb,var(--acc) 55%,transparent))}
+.emblem .leaf{fill:#050505;stroke:var(--paper);stroke-width:2.2;stroke-linejoin:round;stroke-dasharray:140;stroke-dashoffset:140;animation:ink 1.1s cubic-bezier(.6,.1,.2,1) forwards}
+.emblem .leaf:nth-child(2){animation-delay:.12s}.emblem .leaf:nth-child(3){animation-delay:.24s}
+.emblem .leaf:nth-child(4){animation-delay:.36s}.emblem .leaf:nth-child(5){animation-delay:.48s}
+.emblem .stem{fill:none;stroke:var(--paper);stroke-width:3;stroke-linecap:round}
+@keyframes ink{to{stroke-dashoffset:0;fill:color-mix(in srgb,var(--acc) 14%,#050505)}}
+@keyframes aura{from{opacity:.55;transform:scale(.94)}to{opacity:1;transform:scale(1.04)}}
 
-        .container::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--red-300), var(--red-500), var(--red-300), transparent);
-            box-shadow: 0 0 20px 2px var(--red-glow);
-        }
+/* grimoire cards on home */
+.grims{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
+.grim{display:flex;flex-direction:column;background:var(--panel);border:3px solid var(--paper);padding:26px 24px 24px;text-decoration:none;position:relative;transition:transform .15s, box-shadow .15s}
+.grim:hover{transform:translate(-4px,-4px);box-shadow:8px 8px 0 var(--acc)}
+.grim .ic{width:64px;height:64px;margin-bottom:16px}
+.grim h3{font-size:36px;margin-bottom:8px}
+.grim p{color:var(--mute);font-size:16px;flex:1}
+.grim .leaves{margin-top:18px;font-size:15px;color:var(--paper);font-weight:700}
+.grim.five{border-color:var(--acc);background:linear-gradient(160deg,color-mix(in srgb,var(--acc) 16%,#050505),var(--panel) 60%)}
+.grim.five .leaves{color:var(--acc)}
+.band{border-top:3px solid var(--paper);padding:46px 0;background:var(--paper);color:var(--ink)}
+.band p{font:400 clamp(26px,4vw,44px)/1.05 var(--display);max-width:26ch}
 
-        h1 {
-            margin: 4px 0 28px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 2.1rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            background: linear-gradient(180deg, #ff5f6e, var(--red-500) 60%, var(--red-700));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            filter: drop-shadow(0 0 18px var(--red-glow));
-        }
+/* scripts */
+.search{width:100%;max-width:420px;background:var(--ink);border:3px solid var(--paper);color:var(--paper);padding:13px 16px;font:500 17px var(--body);margin:22px 0 14px}
+.search::placeholder{color:var(--mute)}
+.list{display:grid;gap:16px}
+.script{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;background:var(--panel);border:3px solid var(--line);border-left:8px solid var(--paper);padding:20px 22px}
+.script:hover{border-color:var(--paper);border-left-color:var(--acc)}
+.script h3{font-size:30px;margin-bottom:4px}
+.meta{color:var(--mute);font-size:15px}
+.feat{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.feat span{border:2px solid var(--line);padding:2px 10px;font-size:14px;color:#cfcbc4}
+.st{display:inline-block;font:400 15px/1 var(--display);letter-spacing:.06em;padding:5px 9px 3px;margin-left:10px;vertical-align:middle;background:var(--paper);color:var(--ink)}
+.st.down{background:#d1121b;color:var(--paper)}
+.empty{padding:30px;border:3px dashed var(--line);color:var(--mute)}
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: #ff8f99;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-        }
+/* premium */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
+.plan{background:var(--panel);border:3px solid var(--paper);padding:30px 28px}
+.plan.pro{border-color:var(--gold);background:linear-gradient(165deg,#1d1505,var(--panel) 55%)}
+.plan h3{font-size:46px}
+.price{font:400 30px/1 var(--display);margin:10px 0 22px;color:var(--mute)}
+.pro .price{color:var(--gold)}
+.plan ul{list-style:none;padding:0;margin:0 0 28px}
+.plan li{padding:10px 0;border-top:1px solid var(--line);display:flex;gap:12px}
+.plan li::before{content:"\2715";color:var(--mute);flex:none;width:18px}
+.plan li.y::before{content:"\2713";color:var(--paper);font-weight:700}
+.pro li.y::before{color:var(--gold)}
+.plan li.n{color:var(--mute)}
 
-        textarea {
-            width: 100%;
-            height: 150px;
-            background: #0a0304;
-            color: #ff8f8f;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px;
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 0.9rem;
-            resize: vertical;
-            margin-bottom: 18px;
-            outline: none;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
+/* key */
+.steps{list-style:none;padding:0;margin:40px 0 0;display:grid;gap:18px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:70px 1fr;gap:20px;background:var(--panel);border:3px solid var(--paper);padding:22px}
+.steps li::before{content:counter(s);font:400 64px/.9 var(--display);color:var(--acc)}
+.steps h3{font-size:30px;margin-bottom:6px}
+.steps p{color:var(--mute);font-size:16px}
+.code{display:flex;gap:12px;align-items:stretch;margin-top:14px}
+.code code{flex:1;background:var(--ink);border:2px solid var(--line);padding:12px 14px;font:500 14px/1.5 ui-monospace,Menlo,Consolas,monospace;overflow-x:auto;white-space:nowrap;color:#e8e4dc}
 
-        textarea::placeholder { color: #5c3a3d; }
+footer{border-top:3px solid var(--paper);padding:28px 0;color:var(--mute);font-size:15px}
+footer .wrap{display:flex;gap:14px;flex-wrap:wrap}
+footer a{color:var(--paper);font-weight:700}
 
-        textarea:focus {
-            border-color: var(--red-400);
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(212, 25, 42, 0.25), 0 0 20px var(--red-glow);
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            min-width: 150px;
-            padding: 13px 14px;
-            background: #0a0304;
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--red-400);
-            box-shadow: 0 0 0 3px rgba(212, 25, 42, 0.25);
-        }
-
-        button {
-            flex: 1;
-            min-width: 140px;
-            padding: 13px;
-            border: 1px solid rgba(255, 90, 100, 0.25);
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: #fff;
-            background: linear-gradient(180deg, var(--red-400), var(--red-700));
-            box-shadow:
-                0 4px 14px rgba(179, 0, 0, 0.45),
-                inset 0 1px 0 rgba(255, 255, 255, 0.25),
-                inset 0 -2px 6px rgba(0, 0, 0, 0.35);
-            transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
-        }
-
-        button:hover {
-            filter: brightness(1.15);
-            transform: translateY(-1px);
-            box-shadow:
-                0 6px 20px rgba(212, 25, 42, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                inset 0 -2px 6px rgba(0, 0, 0, 0.35);
-        }
-
-        button:active { transform: translateY(0); filter: brightness(0.95); }
-
-        .copy-btn { background: linear-gradient(180deg, #c62233, var(--red-900)); }
-        .dl-btn { background: linear-gradient(180deg, #e0273a, var(--red-800)); }
-
-        .footer-note {
-            text-align: center;
-            margin-top: 6px;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-        }
-    </style>
+/* ---- animation ---- */
+#embers{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero h1 span{animation:slam .65s cubic-bezier(.2,.9,.2,1) both}
+.hero h1 span:nth-child(1){animation-delay:.45s}
+.hero h1 span:nth-child(2){animation-delay:.6s}
+.hero h1 span:nth-child(3){animation-delay:.75s}
+.hero h1.again span:nth-child(1){animation-delay:0s}.hero h1.again span:nth-child(2){animation-delay:.1s}.hero h1.again span:nth-child(3){animation-delay:.2s}
+@keyframes slam{from{opacity:0;transform:translateX(-90px) skewX(-14deg)}to{opacity:1;transform:none}}
+.hero p,.hero .btns{animation:fadeup .6s 1.05s both}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.emblem svg{animation:float 7s ease-in-out 1.6s infinite alternate}
+@keyframes float{from{transform:rotate(-3deg) translateY(0)}to{transform:rotate(4deg) translateY(-10px)}}
+main>section.on{animation:reveal .5s cubic-bezier(.7,0,.2,1)}
+@keyframes reveal{from{clip-path:polygon(0 0,0 0,-12% 100%,-12% 100%)}to{clip-path:polygon(0 0,112% 0,100% 100%,-12% 100%)}}
+.brand svg,.grim .ic{transition:transform .5s cubic-bezier(.3,1.4,.4,1)}
+.brand:hover svg,.grim:hover .ic{transform:rotate(72deg) scale(1.08)}
+.script{animation:fadeup .45s both}
+.script:nth-child(2){animation-delay:.07s}.script:nth-child(3){animation-delay:.14s}.script:nth-child(n+4){animation-delay:.2s}
+.steps li{animation:fadeup .5s both}
+.steps li:nth-child(2){animation-delay:.1s}.steps li:nth-child(3){animation-delay:.2s}
+.plan{animation:fadeup .5s both}.plan.pro{animation-delay:.12s}
+.deck{display:flex;gap:18px;align-items:flex-end;margin-top:38px;max-width:520px}
+.dots{display:flex;gap:16px;flex-wrap:wrap;flex:1}
+.deck button{position:relative;background:none;border:0;color:var(--mute);font:400 17px/1 var(--display);letter-spacing:.05em;padding:0 0 12px;min-width:64px;min-height:20px;text-align:left;cursor:pointer}
+.deck button span{display:block;margin-bottom:10px}
+.deck .dots button::before{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:#ffffff26}
+.deck button i{position:absolute;left:0;bottom:0;height:4px;width:0;background:var(--acc)}
+.deck button:hover{color:var(--paper)}
+.deck button[aria-selected=true]{color:var(--paper)}
+.deck button[aria-selected=true] i{animation:fill 10s linear forwards}
+.deck.paused button[aria-selected=true] i{animation-play-state:paused}
+@media(hover:hover){.deck:hover button[aria-selected=true] i{animation-play-state:paused}}
+@keyframes fill{to{width:100%}}
+.deck .pause{min-width:0;flex:none;border:2px solid var(--line);padding:9px 12px 7px;font-size:15px}
+.chips{display:flex;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+.chips button{background:transparent;border:2px solid var(--line);color:var(--mute);font:400 17px/1 var(--display);letter-spacing:.05em;padding:10px 16px 8px;cursor:pointer}
+.chips button:hover{border-color:var(--paper);color:var(--paper)}
+.chips button[aria-pressed=true]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.st.pro{background:var(--gold);color:var(--ink)}
+.join{flex:none}
+/* hero background */
+.hero .wrap{z-index:2}
+.hero .wrap>div{max-width:640px}
+.hero .bg{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--ink)}
+.hero .bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+.hero .bg::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#050505b8 0,#05050066 38%,transparent 66%),linear-gradient(0deg,#05050099,transparent 30%)}
+/* community */
+.tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:24px 0 22px}
+.tools .search{margin:0;flex:1 1 220px;max-width:none}
+.tools .chips{margin:0}
+.post{display:grid;grid-template-columns:160px 1fr auto;gap:18px;align-items:center;background:var(--panel);border:3px solid var(--line);border-left:8px solid var(--paper);padding:14px 18px 14px 14px;animation:fadeup .4s both}
+.post:hover{border-color:var(--paper);border-left-color:var(--acc)}
+.th{width:160px;height:100px;object-fit:cover;border:2px solid var(--line);background:#000;display:block}
+.th.none{display:grid;place-items:center;font:400 38px var(--display);color:var(--mute)}
+.post h3{font-size:28px;margin-bottom:4px}
+.stat{color:var(--mute);font-size:14px;margin-top:10px}
+.vf{width:1.05em;height:1.05em;color:#3a9bff;vertical-align:-.14em;margin-left:5px}
+dialog{background:var(--ink);color:var(--paper);border:3px solid var(--paper);padding:0;width:min(760px,94vw);max-height:92vh;box-shadow:8px 8px 0 var(--acc)}
+dialog::backdrop{background:#000d}
+.dlg{padding:26px;overflow:auto;max-height:calc(92vh - 6px)}
+.dlg h3{font-size:40px;margin-bottom:10px}
+.dlg label{display:block;font-size:15px;color:var(--mute);margin-bottom:14px}
+.in{display:block;width:100%;margin-top:6px;background:var(--ink);border:3px solid var(--line);color:var(--paper);padding:10px 12px;font:500 16px var(--body)}
+.in:focus{border-color:var(--paper);outline:none}
+textarea.in{resize:vertical}
+textarea.code,.src{font:500 13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.hint{color:var(--mute);font-size:14px;margin:-4px 0 14px}
+.msg{min-height:1.6em;margin-bottom:10px;color:var(--gold);font-weight:700}
+.big{width:100%;max-height:300px;object-fit:cover;border:2px solid var(--line);margin-bottom:16px;display:block}
+.desc{margin:14px 0;white-space:pre-wrap;color:#cfcbc4}
+.src{background:#000;border:2px solid var(--line);padding:14px;max-height:280px;overflow:auto;white-space:pre;margin:14px 0 6px;color:#e8e4dc}
+.dlg a{color:var(--paper);font-weight:700}
+.adm h3{font-size:36px;margin:38px 0 14px}
+.tw{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;min-width:560px}
+.tbl th,.tbl td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
+.tbl th{font:400 16px var(--display);letter-spacing:.05em;color:var(--mute)}
+.arow{border:3px solid var(--line);padding:16px;margin-bottom:12px;background:var(--panel)}
+.arow summary{cursor:pointer;color:var(--mute);margin-top:8px}
+.arow .btns{margin-top:12px}
+.admtop{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:18px 0 0}
+.admtop select{width:auto;margin:0}
+/* sound toggle */
+.dock{position:fixed;left:14px;bottom:14px;z-index:30}
+.dock button{background:var(--ink);color:var(--paper);border:2px solid var(--paper);font:400 14px/1 var(--display);letter-spacing:.05em;padding:9px 13px 7px;cursor:pointer}
+.dock button:hover{background:var(--paper);color:var(--ink)}
+.ytw{position:fixed;left:0;bottom:0;width:200px;height:200px;opacity:0;pointer-events:none;z-index:-1;overflow:hidden}
+footer{padding-bottom:70px}
+@media(max-width:860px){
+  .tiles{grid-template-columns:1fr 1fr}
+  .hero .wrap{grid-template-columns:1fr;min-height:0}
+  .emblem{order:-1;max-width:420px;margin:0 auto}
+  .grims,.cmp{grid-template-columns:1fr}
+  .script{grid-template-columns:1fr}
+  .steps li{grid-template-columns:48px 1fr}
+  .steps li::before{font-size:46px}
+  nav{gap:12px}
+  .brand span{display:none}
+  .join{display:none}
+  .hero .bg img{opacity:.55}
+  .hero .bg::after{background:linear-gradient(0deg,#050505,#050505aa 45%,#05050566)}
+  .post{grid-template-columns:104px 1fr;padding:12px}
+  .th{width:104px;height:70px}
+  .th.none{font-size:26px}
+  .post .btn{grid-column:1/-1}
+  .grid2{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .emblem::before{animation:none}
+  .emblem .leaf{animation:none;stroke-dashoffset:0;fill:color-mix(in srgb,var(--acc) 14%,#050505)}
+  .btn,.grim,.brand svg,.grim .ic{transition:none}
+    .hero h1 span,.hero p,.hero .btns,.emblem svg,main>section.on,.script,.steps li,.plan{animation:none}
+  #embers{display:none}
+  .deck button[aria-selected=true] i{width:100%;animation:none}
+  :root{transition:none}
+  .emblem{transform:none}
+}
+/* accounts, profile, dashboard, checkpoint */
+[hidden]{display:none!important}
+.btn:disabled{opacity:.5;cursor:default}
+.btn:disabled:hover{background:var(--paper);border-color:var(--paper);color:var(--ink)}
+.btn.ghost:disabled:hover{background:transparent;color:var(--paper);border-color:var(--paper)}
+.narrow{max-width:600px}
+.auth{margin:26px 0 20px}
+.sec{font-size:36px;margin:38px 0 14px}
+.av{width:104px;height:104px;border-radius:50%;object-fit:cover;border:4px solid var(--ink);outline:3px solid var(--acc);background:#000;display:block;flex:none}
+.av.none{display:grid;place-items:center;font:400 48px var(--display);background:color-mix(in srgb,var(--acc) 35%,#050505);color:var(--paper)}
+.pbanner{height:190px;border:3px solid var(--paper);overflow:hidden;background:linear-gradient(120deg,color-mix(in srgb,var(--acc) 55%,#050505),#0e0e0e)}
+.pbanner img{width:100%;height:100%;object-fit:cover;display:block}
+.phead{display:flex;gap:20px;align-items:flex-start;margin:-52px 0 0 22px;position:relative}
+.phead>div{padding-top:62px;min-width:0}
+.phead h2,.dhead h2{margin:0 0 4px;font-size:clamp(34px,6vw,56px);overflow-wrap:anywhere}
+.dhead{display:flex;gap:20px;align-items:center}
+.pf .desc{margin-top:18px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:26px 0}
+.tile{background:var(--panel);border:3px solid var(--line);border-top:5px solid var(--acc);padding:14px 16px}
+.tile b{display:block;font:400 38px/1 var(--display)}
+.tile span{color:var(--mute);font-size:14px}
+.cust{max-width:640px}
+.cust label{display:block;font-size:15px;color:var(--mute);margin-bottom:14px}
+.cust .chk{display:flex;gap:8px;align-items:center;margin:-6px 0 14px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 16px}
+.swatches button{width:34px;height:34px;border:3px solid var(--line);cursor:pointer;padding:0}
+.swatches button[aria-pressed=true]{border-color:var(--paper)}
+.swatches input{width:44px;height:34px;border:3px solid var(--line);background:none;padding:0;cursor:pointer}
+.cplist{margin:16px 0 0;display:grid;gap:10px}
+.cpi{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;border:3px solid var(--line);padding:14px;background:var(--ink)}
+.cpi .cpn{display:grid;place-items:center;width:44px;height:44px;border:3px solid var(--line);font:400 22px var(--display);color:var(--mute)}
+.cpi.now{border-color:var(--paper)}
+.cpi.now .cpn{background:var(--acc);border-color:var(--acc);color:var(--paper)}
+.cpi.done .cpn{background:var(--paper);border-color:var(--paper);color:var(--ink)}
+.cpi.lock{opacity:.5}
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>ObsessionHub Obfuscator</h1>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <path id="leaf" d="M0,0 C-15,-7 -25,-28 -11,-40 C-5,-45 0,-39 0,-32 C0,-39 5,-45 11,-40 C25,-28 15,-7 0,0Z"/>
+  </defs>
+</svg>
 
-        <label for="inputScript">Input Script (Lua)</label>
-        <textarea id="inputScript" placeholder="Paste your script here..."></textarea>
+<header>
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="brand" href="#home" aria-label="BlackClover home"><span data-clover="5" data-class="" aria-hidden="true"></span><span>BlackClover</span></a>
+      <div class="tabs">
+        <a href="#home" data-tab="home">Home</a>
+        <a href="#scripts" data-tab="scripts">Scripts</a>
+        <a href="#premium" data-tab="premium">Premium</a>
+        <a href="#getkey" data-tab="getkey">Get key</a>
+        <span id="navUser" style="display:contents"></span>
+      </div>
+      <a class="btn sm join" id="join" href="#" target="_blank" rel="noopener">Discord</a>
+    </nav>
+  </div>
+</header>
 
-        <div class="controls">
-            <button onclick="obfuscateScript()">1. Obfuscate</button>
-            <button class="copy-btn" onclick="copyCode()">2. Copy Output</button>
+<main>
+  <!-- HOME -->
+  <section id="home" data-page="home">
+    <div class="hero">
+      <div class="bg" aria-hidden="true"><img src="asta.gif" alt="" decoding="async"></div>
+      <canvas id="embers" aria-hidden="true"></canvas>
+      <div class="wrap">
+        <div>
+          <h1 id="hl"><span>Never</span><span class="r">give up.</span><span>Script on.</span></h1>
+          <p>Roblox scripts built to cut through anything. Free with a key, stronger with premium.</p>
+          <div class="btns">
+            <a class="btn" href="#scripts">Browse scripts</a>
+            <a class="btn ghost" href="#getkey">Get your key</a>
+          </div>
         </div>
-
-        <label for="outputScript">Obfuscated Output</label>
-        <textarea id="outputScript" placeholder="Your obfuscated code will appear here..." readonly></textarea>
-
-        <div class="controls">
-            <input type="text" id="fileName" value="obsessionhub_script">
-            <button class="dl-btn" onclick="downloadFile()">3. Download as .txt</button>
-        </div>
+      </div>
     </div>
+    <div class="wrap">
+      <div class="grims" style="padding:56px 0 70px;margin:0">
+        <a class="grim" href="#scripts">
+          <span data-clover="3" data-class="ic"></span>
+          <h3>Scripts</h3>
+          <p>Scripts posted by players. Search by game, tag or place ID, then copy and like.</p>
+          <div class="leaves">Three-leaf. Open to everyone.</div>
+        </a>
+        <a class="grim" href="#getkey">
+          <span data-clover="4" data-class="ic"></span>
+          <h3>Key system</h3>
+          <p>Three steps from checkpoint to executing. Keys are free.</p>
+          <div class="leaves">Four-leaf. Earned in minutes.</div>
+        </a>
+        <a class="grim five" href="#premium">
+          <span data-clover="5" data-class="ic"></span>
+          <h3>Premium</h3>
+          <p>No key, early access, and the scripts that never reach the free tier.</p>
+          <div class="leaves">Five-leaf. The rarest tier.</div>
+        </a>
+      </div>
+    </div>
+    <div class="band"><div class="wrap"><p>A mage without magic is still a mage. Run it anyway.</p></div></div>
+  </section>
 
-    <script>
-        function obfuscateScript() {
-            const input = document.getElementById('inputScript').value;
-            if (!input.trim()) {
-                alert("Please paste a script first.");
-                return;
-            }
+  <!-- SCRIPTS -->
+  <section id="scripts" data-page="scripts">
+    <div class="wrap page">
+      <h2>Scripts</h2>
+      <p class="lede">Scripts posted by the community. Open one to read it, copy it and like it. New posts are reviewed first. Verified authors skip the queue.</p>
+      <div class="tools">
+        <input class="search" id="q" type="search" placeholder="Search by name, game, tag or place ID" aria-label="Search scripts" autocomplete="off">
+        <div class="chips" id="chips" role="group" aria-label="Sort"><button type="button" data-s="new" aria-pressed="true">Newest</button><button type="button" data-s="liked" aria-pressed="false">Most liked</button><button type="button" data-s="viewed" aria-pressed="false">Most viewed</button></div>
+        <button type="button" class="btn sm" id="postBtn">Post script</button>
+      </div>
+      <div class="list" id="list"></div>
+    </div>
+  </section>
 
-            // The notification UI is placed inside a non-yielding thread
-            const notifyLua = `task.spawn(function() pcall(function() local TS = game:GetService("TweenService") local CG = game:GetService("CoreGui") local sg = Instance.new("ScreenGui") sg.Name = "ObsessionHubProtect" sg.Parent = CG local f = Instance.new("Frame") f.Size = UDim2.new(0, 340, 0, 50) f.Position = UDim2.new(0.5, -170, 0, -60) f.BackgroundColor3 = Color3.fromRGB(18, 4, 6) f.Parent = sg local uc = Instance.new("UICorner") uc.CornerRadius = UDim.new(0, 8) uc.Parent = f local ug = Instance.new("UIGradient") ug.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 12, 16)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(32, 5, 7)), ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 2, 3))}) ug.Rotation = 90 ug.Parent = f local us = Instance.new("UIStroke") us.Color = Color3.fromRGB(235, 30, 45) us.Thickness = 2 us.Parent = f local usg = Instance.new("UIGradient") usg.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 110, 120)), ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 20, 30)), ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 110, 120))}) usg.Parent = us local img = Instance.new("ImageLabel") img.AnchorPoint = Vector2.new(0, 0.5) img.Size = UDim2.new(0, 26, 0, 26) img.Position = UDim2.new(0, 14, 0.5, 0) img.BackgroundTransparency = 1 img.Image = "rbxassetid://10672728956" img.ImageColor3 = Color3.fromRGB(255, 60, 72) img.Parent = f local txt = Instance.new("TextLabel") txt.AnchorPoint = Vector2.new(0, 0.5) txt.Size = UDim2.new(1, -64, 0, 20) txt.Position = UDim2.new(0, 54, 0.5, 0) txt.BackgroundTransparency = 1 txt.Text = "This script is protected by ObsessionHub" txt.TextColor3 = Color3.fromRGB(255, 235, 235) txt.Font = Enum.Font.GothamBold txt.TextSize = 14 txt.TextXAlignment = Enum.TextXAlignment.Left txt.TextYAlignment = Enum.TextYAlignment.Center txt.TextScaled = false txt.TextWrapped = false txt.Parent = f local tsc = Instance.new("UITextSizeConstraint") tsc.MaxTextSize = 14 tsc.MinTextSize = 10 tsc.Parent = txt txt.TextScaled = true TS:Create(f, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -170, 0, 40)}):Play() task.wait(3.5) local tf = TweenInfo.new(1.5, Enum.EasingStyle.Linear) TS:Create(f, tf, {BackgroundTransparency = 1}):Play() TS:Create(us, tf, {Transparency = 1}):Play() TS:Create(img, tf, {ImageTransparency = 1}):Play() TS:Create(txt, tf, {TextTransparency = 1}):Play() task.wait(1.5) sg:Destroy() end) end)\n`;
+  <!-- PREMIUM -->
+  <section id="premium" data-page="premium">
+    <div class="wrap page">
+      <h2>Premium</h2>
+      <p class="lede">Skip the key, get new scripts first, and get help directly from the dev.</p>
+      <div class="cmp">
+        <div class="plan">
+          <h3>Free</h3>
+          <div class="price" id="freePrice"></div>
+          <ul>
+            <li class="y">All free scripts</li>
+            <li class="y">Key required, renews on expiry</li>
+            <li class="y">Community support in Discord</li>
+            <li class="n">Premium-only scripts</li>
+            <li class="n">Early access to updates</li>
+            <li class="n">No-key loader</li>
+          </ul>
+          <a class="btn ghost" href="#getkey">Get free key</a>
+        </div>
+        <div class="plan pro">
+          <h3>Premium</h3>
+          <div class="price" id="proPrice"></div>
+          <ul>
+            <li class="y">Everything in Free</li>
+            <li class="y">Premium-only scripts</li>
+            <li class="y">Early access to updates</li>
+            <li class="y">No-key loader</li>
+            <li class="y">Priority support from the dev</li>
+          </ul>
+          <a class="btn" id="buy" href="#" target="_blank" rel="noopener">Buy on Discord</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            // Merge the notification logic with the user's script
-            const combinedScript = notifyLua + "\n" + input;
+  <!-- GET KEY -->
+  <section id="getkey" data-page="getkey">
+    <div class="wrap page">
+      <h2>Get key</h2>
+      <p class="lede">Free access takes three steps. Finish the checkpoint, copy your key, and it works until it expires. Then repeat the checkpoint.</p>
+      <ol class="steps">
+        <li>
+          <div>
+            <h3>Complete the checkpoint</h3>
+            <p>Open each link, wait for the timer to finish, then press Continue.</p>
+            <div id="cp"><p class="meta" style="margin-top:14px">Loading...</p></div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Copy your key</h3>
+            <p>Your key shows up here after the last checkpoint. Copy it exactly, with no spaces.</p>
+            <div id="keyOut"></div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Run the script</h3>
+            <p>Paste the key into the key box when the script opens. Don't have a loader yet? Copy one from the Scripts tab.</p>
+            <div class="code"><code id="keyEx">script_key = "YOUR-KEY"</code><button class="btn sm" id="keyExCopy" data-copy="script_key = &quot;YOUR-KEY&quot;">Copy</button></div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
 
-            let byteList = [];
-            for (let i = 0; i < combinedScript.length; i++) {
-                byteList.push(combinedScript.charCodeAt(i));
-            }
-            const byteString = byteList.join(',');
+  <!-- LOGIN -->
+  <section id="login" data-page="login">
+    <div class="wrap page narrow">
+      <h2 id="authTitle">Log in</h2>
+      <p class="lede" id="authLede"></p>
+      <div class="chips auth" id="authTabs" role="group" aria-label="Account"><button type="button" data-m="login" aria-pressed="true">Log in</button><button type="button" data-m="register" aria-pressed="false">Create account</button></div>
+      <form id="authForm" class="cust" autocomplete="on">
+        <label>Username<input class="in" name="name" maxlength="20" autocomplete="username" required></label>
+        <label>Password<input class="in" name="pass" type="password" minlength="6" maxlength="64" autocomplete="current-password" required></label>
+        <label id="authConfirm" hidden>Confirm password<input class="in" name="pass2" type="password" minlength="6" maxlength="64" autocomplete="new-password"></label>
+        <p class="hint" id="authHint"></p>
+        <p class="msg" id="authMsg" role="status"></p>
+        <div class="btns"><button class="btn" type="submit" id="authGo">Log in</button></div>
+      </form>
+    </div>
+  </section>
 
-            // Clean wrapper - no plain text UI code visible
-            const obsessionHubHeader = `-- obsessionhub\n`;
-            const luaWrapper = `local _e = {${byteString}}\n` +
-                               `local _t = {}\n` +
-                               `for i, v in ipairs(_e) do _t[i] = string.char(v) end\n` +
-                               `local _s = table.concat(_t)\n` +
-                               `local _f, _err = loadstring(_s)\n` +
-                               `if _f then\n` +
-                               `    _f()\n` +
-                               `else\n` +
-                               `    error("ObsessionHub Execution Failed: " .. tostring(_err))\n` +
-                               `end`;
+  <!-- DASHBOARD -->
+  <section id="dashboard" data-page="dashboard">
+    <div class="wrap page">
+      <div id="dashHead"></div>
+      <div class="tiles" id="dashTiles"></div>
+      <h3 class="sec" style="margin-top:10px">My scripts</h3>
+      <div class="list" id="dashPosts"></div>
+      <h3 class="sec">Customize profile</h3>
+      <form id="profForm" class="cust" autocomplete="off">
+        <div class="grid2">
+          <label>Profile picture<input class="in" name="avatar" type="file" accept="image/*"></label>
+          <label>Banner<input class="in" name="banner" type="file" accept="image/*"></label>
+        </div>
+        <label class="chk"><input type="checkbox" name="rmAvatar"> Remove my picture</label>
+        <label class="chk"><input type="checkbox" name="rmBanner"> Remove my banner</label>
+        <div class="grid2">
+          <label>Display name<input class="in" name="display" maxlength="24"></label>
+          <label>Favorite game<input class="in" name="game" maxlength="40"></label>
+          <label>Discord<input class="in" name="discord" maxlength="40" placeholder="username"></label>
+        </div>
+        <label>Bio<textarea class="in" name="bio" rows="3" maxlength="240"></textarea></label>
+        <div>Accent color</div>
+        <div class="swatches" id="swatches"></div>
+        <p class="msg" id="profMsg" role="status"></p>
+        <div class="btns"><button class="btn" type="submit" id="profSave">Save profile</button></div>
+      </form>
+    </div>
+  </section>
 
-            document.getElementById('outputScript').value = obsessionHubHeader + luaWrapper;
-        }
+  <!-- PROFILE -->
+  <section id="profile" data-page="profile">
+    <div class="wrap page pf" id="profBody"></div>
+  </section>
 
-        function copyCode() {
-            const outputText = document.getElementById('outputScript');
-            const text = outputText.value;
-            if (!text) return;
+  <!-- ADMIN -->
+  <section id="admin" data-page="admin">
+    <div class="wrap page adm">
+      <h2>Admin</h2>
+      <div id="admBody"></div>
+    </div>
+  </section>
+</main>
 
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert("Copied to clipboard! (" + text.length + " characters)");
-                }).catch(() => {
-                    fallbackCopy(outputText, text);
-                });
-            } else {
-                fallbackCopy(outputText, text);
-            }
-        }
+<footer>
+  <div class="wrap">
+    <a id="dc" href="#" target="_blank" rel="noopener">.gg/znwCgvzBgu</a>
+    <a href="#admin">Admin</a>
+  </div>
+</footer>
 
-        function fallbackCopy(outputText, text) {
-            outputText.focus();
-            outputText.select();
-            outputText.setSelectionRange(0, text.length);
-            const ok = document.execCommand("copy");
-            if (ok) {
-                alert("Copied to clipboard! (" + text.length + " characters)");
-            } else {
-                alert("Copy failed. Select the text manually (Ctrl+A / Cmd+A) and copy it.");
-            }
-        }
+<dialog id="postDlg"><div class="dlg">
+  <h3>Post a script</h3>
+  <form id="postForm" autocomplete="off">
+    <div class="grid2">
+      <label>Script name<input class="in" name="title" maxlength="60" required></label>
+      <label>Roblox game<input class="in" name="game" maxlength="60" required></label>
+      <label>Place ID<input class="in" name="placeId" inputmode="numeric" pattern="[0-9]{1,15}" maxlength="15" required></label>
+      <label>Tags, separated by commas<input class="in" name="tags" maxlength="90" placeholder="esp, aimbot, auto farm"></label>
+    </div>
+    <p class="hint">The Place ID is the number in the game's link: roblox.com/games/PLACE-ID. Your post is published under your account name.</p>
+    <label>Image<input class="in" name="image" type="file" accept="image/*"></label>
+    <label>Description<textarea class="in" name="desc" rows="3" maxlength="600"></textarea></label>
+    <label>Script<textarea class="in code" name="code" rows="9" maxlength="20000" required spellcheck="false"></textarea></label>
+    <p class="msg" id="postMsg" role="status"></p>
+    <div class="btns"><button class="btn sm" type="submit">Submit</button><button class="btn ghost sm" type="button" data-close>Cancel</button></div>
+  </form>
+</div></dialog>
+<dialog id="viewDlg"><div class="dlg" id="viewBody"></div></dialog>
 
-        function downloadFile() {
-            const outputText = document.getElementById('outputScript').value;
-            let fileName = document.getElementById('fileName').value.trim();
+<div class="ytw" aria-hidden="true"><div id="yt"></div></div>
+<aside class="dock" id="dock" aria-label="Background music">
+  <button type="button" id="snd" aria-pressed="false">Sound on</button>
+</aside>
 
-            if (!outputText) {
-                alert("Please obfuscate a script first.");
-                return;
-            }
-            if (!fileName) {
-                fileName = "obsessionhub_script";
-            }
-            if (!fileName.endsWith('.txt') && !fileName.endsWith('.lua')) {
-                fileName += '.txt';
-            }
+<script>
+/* ---------- edit here ---------- */
+const CONFIG = {
+  discord: "https://discord.gg/znwCgvzBgu",
+  // One entry per checkpoint step. Put your Linkvertise / Work.ink / Lootlabs links in url.
+  // The server default is 3 steps and a 12 second wait per step (env CHECKPOINT_STEPS, CHECKPOINT_WAIT).
+  checkpoints: [
+    { label: "Join the Discord", url: "https://discord.gg/znwCgvzBgu" },
+    { label: "Checkpoint 2", url: "https://discord.gg/znwCgvzBgu" },
+    { label: "Checkpoint 3", url: "https://discord.gg/znwCgvzBgu" }
+  ],
+  buyLink: "https://discord.gg/znwCgvzBgu",
+  freePrice: "$0",
+  premiumPrice: "$4.99 per month",
+  verifyViews: 1000, // an author meets the bar for Verified at this many total views...
+  verifyLikes: 100   // ...and this many total likes (admin panel highlights them)
+};
+/* ------------------------------- */
 
-            const blob = new Blob([outputText], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
+const NS = "http://www.w3.org/2000/svg";
+function clover(n, cls){
+  const leaves = Array.from({length:n},(_,i)=>`<use href="#leaf" class="leaf" transform="rotate(${i*360/n})"/>`).join("");
+  return `<svg class="${cls||""}" viewBox="-50 -50 100 100" xmlns="${NS}" fill="currentColor"><g fill="#050505" stroke="#f3f1ec" stroke-width="2.4" stroke-linejoin="round">${leaves}</g><path d="M2,2 C6,12 10,20 18,26" fill="none" stroke="#f3f1ec" stroke-width="3" stroke-linecap="round"/></svg>`;
+}
+document.querySelectorAll("[data-clover]").forEach(el=>{
+  el.outerHTML = clover(+el.dataset.clover, el.dataset.class);
+});
 
-            a.style.display = 'none';
-            a.href = url;
-            a.download = fileName;
+/* headline changes every 10 seconds, accent stays red */
+const SLIDES=[
+  {lines:["Never","give up.","Script on."]},
+  {lines:["Rise","above.","Script on."]},
+  {lines:["Break","the limit.","Script on."]},
+  {lines:["Own","the clock.","Script on."]}
+];
+(function(){
+  const root=document.documentElement, hl=document.getElementById("hl"), home=document.getElementById("home");
+  const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let cur=0, first=true;
+  function show(i){
+    cur=(i+SLIDES.length)%SLIDES.length;
+    const x=SLIDES[cur];
+    hl.innerHTML=x.lines.map((t,k)=>`<span${k===1?' class="r"':""}>${t}</span>`).join("");
+    if(!first){hl.classList.remove("again");void hl.offsetWidth;hl.classList.add("again")}
+    first=false;
+  }
+  show(0);
+  if(!still) setInterval(()=>{ if(!document.hidden&&home.classList.contains("on")) show(cur+1) },10000);
+})();
 
-            document.body.appendChild(a);
-            a.click();
+/* links */
+document.getElementById("buy").href = CONFIG.buyLink;
+document.getElementById("dc").href = CONFIG.discord;
+document.getElementById("join").href = CONFIG.discord;
+document.getElementById("freePrice").textContent = CONFIG.freePrice;
+document.getElementById("proPrice").textContent = CONFIG.premiumPrice;
 
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        }
-    </script>
+/* community scripts */
+const API="/api/bc";
+const listEl=document.getElementById("list");
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+const VER='<svg class="vf" viewBox="0 0 20 20" role="img" aria-label="Verified"><circle cx="10" cy="10" r="10" fill="currentColor"/><path d="M5.5 10.5l3 3 6-7" stroke="#050505" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const fmt=n=>n>=1e4?Math.round(n/1e3)+"k":n>=1e3?(n/1e3).toFixed(1)+"k":String(n);
+const SETUP="Community posting needs the backend. Deploy on Vercel with the api folder and connect a Redis database.";
+const ERR={
+  bad_title:"Name the script, 3 to 60 characters.",bad_game:"Enter the Roblox game name.",bad_place:"Place ID must be a number.",
+  bad_author:"Names use letters, numbers, dot, dash and underscore, 3 to 20 characters.",bad_pass:"Password needs 6 to 64 characters.",
+  bad_code:"The script is empty or longer than 20,000 characters.",bad_image:"That image is too big or not supported.",
+  wrong_pass:"That name is taken and the password does not match.",too_many_pending:"You already have 5 posts waiting for review.",
+  storage_not_configured:SETUP,admin_not_configured:"Set the ADMIN_PASSWORD environment variable on Vercel first.",
+  wrong_login:"Wrong username or password.",name_taken:"That username is taken.",login_required:"Log in first.",
+  slow_down:"Too many tries. Wait a few minutes and try again.",bad_color:"Pick a valid color."
+};
+const cid=(()=>{try{let v=localStorage.getItem("bc-cid");if(!v){v=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now());localStorage.setItem("bc-cid",v)}return v}catch(e){return "anon"+Math.random().toString(36).slice(2)}})();
+let TOKEN="",ME=null;
+try{TOKEN=localStorage.getItem("bc-token")||""}catch(e){}
+async function api(a,body,key){
+  const o={method:body?"POST":"GET",headers:{}};
+  if(TOKEN) o.headers["x-token"]=TOKEN;
+  if(body){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}
+  if(key) o.headers["x-admin"]=key;
+  const r=await fetch(`${API}?a=${a}`,o);
+  let j={};try{j=await r.json()}catch(e){}
+  if(!r.ok){const err=new Error(j.error||"request_failed");err.code=j.error||(r.status===404?"storage_not_configured":"request_failed");err.status=r.status;throw err}
+  return j;
+}
+function toJpeg(file){
+  return new Promise((ok,no)=>{
+    const img=new Image(),u=URL.createObjectURL(file);
+    img.onload=()=>{
+      const k=Math.min(1,560/Math.max(img.width,img.height)),c=document.createElement("canvas");
+      c.width=Math.max(1,Math.round(img.width*k));c.height=Math.max(1,Math.round(img.height*k));
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.72));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(u);no(Object.assign(new Error("bad_image"),{code:"bad_image"}))};
+    img.src=u;
+  });
+}
 
+let posts=[],sort="new",term="",curPost=null;
+function card(x){
+  return `<article class="post">
+    ${x.hasImg?`<img class="th" loading="lazy" alt="" src="${API}?a=img&id=${esc(x.id)}">`:`<div class="th none" aria-hidden="true">${esc(x.game.slice(0,2))}</div>`}
+    <div>
+      <h3>${esc(x.title)}</h3>
+      <div class="meta"><a href="#u/${encodeURIComponent(x.author)}">${esc(x.author)}</a>${x.verified?VER:""} on ${esc(x.game)}, place ${esc(x.placeId)}</div>
+      <div class="feat">${x.tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
+      <div class="stat">${fmt(x.views)} views, ${fmt(x.likes)} likes</div>
+    </div>
+    <button type="button" class="btn sm" data-open="${esc(x.id)}">Open</button>
+  </article>`;
+}
+function render(){
+  const f=term.trim().toLowerCase();
+  const rows=posts.filter(x=>!f||[x.title,x.author,x.game,x.placeId,...x.tags].join(" ").toLowerCase().includes(f));
+  rows.sort(sort==="liked"?(a,b)=>b.likes-a.likes:sort==="viewed"?(a,b)=>b.views-a.views:(a,b)=>b.at-a.at);
+  listEl.innerHTML=rows.length?rows.map(card).join(""):`<div class="empty">${posts.length?"No scripts match that search.":"No scripts yet. Be the first to post one."}</div>`;
+}
+async function load(){
+  if(!posts.length) listEl.innerHTML=`<div class="empty">Loading scripts...</div>`;
+  try{posts=(await api("list")).posts;render()}
+  catch(e){listEl.innerHTML=`<div class="empty">${esc(ERR[e.code]||"Could not reach the server. Try again in a moment.")}</div>`}
+}
+document.getElementById("q").addEventListener("input",e=>{term=e.target.value;render()});
+document.getElementById("chips").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  sort=b.dataset.s;[...e.currentTarget.children].forEach(x=>x.setAttribute("aria-pressed",x===b));render();
+});
+
+const postDlg=document.getElementById("postDlg"),viewDlg=document.getElementById("viewDlg"),postForm=document.getElementById("postForm"),postMsg=document.getElementById("postMsg");
+document.querySelectorAll("dialog").forEach(d=>d.addEventListener("click",e=>{if(e.target===d)d.close()}));
+function openPostForm(){
+  if(!ME){authNote="Log in or create an account to post a script.";location.hash="#login";return}
+  postMsg.textContent="";postDlg.showModal();
+}
+document.getElementById("postBtn").addEventListener("click",openPostForm);
+postForm.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const f=new FormData(postForm),btn=postForm.querySelector("[type=submit]");
+  postMsg.textContent="Sending...";btn.disabled=true;
+  try{
+    let image="";const file=f.get("image");
+    if(file&&file.size) image=await toJpeg(file);
+    const r=await api("post",{title:f.get("title"),game:f.get("game"),placeId:f.get("placeId"),tags:f.get("tags"),desc:f.get("desc"),code:f.get("code"),image});
+    postMsg.textContent=r.status==="approved"?"Posted. It is live now.":"Sent. It goes live after review.";
+    postForm.reset();load();if(CUR==="dashboard")loadDash();setTimeout(()=>postDlg.close(),1500);
+  }catch(err){
+    if(err.status===401){setAuth("",null);authNote="Your session expired. Log in again.";postDlg.close();location.hash="#login"}
+    else postMsg.textContent=ERR[err.code]||"Could not post. Try again.";
+  }
+  btn.disabled=false;
+});
+
+function postHtml(x,liked){
+  return `${x.hasImg?`<img class="big" alt="" src="${API}?a=img&id=${esc(x.id)}">`:""}
+    <h3>${esc(x.title)}</h3>
+    <div class="meta"><a href="#u/${encodeURIComponent(x.author)}">${esc(x.author)}</a>${x.verified?VER:""} on ${esc(x.game)}, <a href="https://www.roblox.com/games/${encodeURIComponent(x.placeId)}" target="_blank" rel="noopener">place ${esc(x.placeId)}</a></div>
+    <div class="feat">${x.tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
+    ${x.desc?`<p class="desc">${esc(x.desc)}</p>`:""}
+    <pre class="src" id="srcBox">${esc(x.code)}</pre>
+    <div class="stat" id="statLine">${fmt(x.views)} views, ${fmt(x.likes)} likes</div>
+    <div class="btns" style="margin-top:16px"><button type="button" class="btn sm" data-copycode>Copy script</button><button type="button" class="btn ghost sm" data-like="${esc(x.id)}">${liked?"Unlike":"Like"}</button><button type="button" class="btn ghost sm" data-close>Close</button></div>`;
+}
+async function openPost(id){
+  const box=document.getElementById("viewBody");
+  box.innerHTML=`<p class="meta">Loading...</p>`;viewDlg.showModal();
+  try{
+    const r=await api("get",{id,cid});curPost=r.post;
+    const i=posts.findIndex(x=>x.id===id);
+    if(i>-1){posts[i]={...curPost};delete posts[i].code;render()}
+    box.innerHTML=postHtml(curPost,r.liked);
+  }catch(e){box.innerHTML=`<p class="meta">This script is no longer available.</p><div class="btns" style="margin-top:14px"><button type="button" class="btn ghost sm" data-close>Close</button></div>`}
+}
+async function likePost(id,b){
+  try{
+    const r=await api("like",{id,cid});
+    b.textContent=r.liked?"Unlike":"Like";
+    if(curPost&&curPost.id===id){curPost.likes=r.likes;document.getElementById("statLine").textContent=`${fmt(curPost.views)} views, ${fmt(r.likes)} likes`}
+    const i=posts.findIndex(x=>x.id===id);if(i>-1){posts[i].likes=r.likes;render()}
+  }catch(e){}
+}
+
+/* admin panel */
+let adminKey="",admData=null,admStatus="pending";
+try{adminKey=sessionStorage.getItem("bc-admin")||""}catch(e){}
+const adm=document.getElementById("admBody");
+function loginHtml(msg){
+  return `<p class="lede">Sign in with the admin password you set on Vercel.</p>
+  <div class="admtop"><input class="in" id="admPass" type="password" placeholder="Admin password" aria-label="Admin password" style="max-width:320px;margin:0"><button type="button" class="btn sm" data-act="login">Sign in</button></div>
+  <p class="msg" role="status">${esc(msg||"")}</p>`;
+}
+async function loadAdmin(msg){
+  if(!adminKey){adm.innerHTML=loginHtml(msg);return}
+  try{admData=await api("admin_list",null,adminKey);renderAdmin()}
+  catch(e){
+    if(e.status===401){adminKey="";try{sessionStorage.removeItem("bc-admin")}catch(_){}adm.innerHTML=loginHtml("Wrong password.")}
+    else adm.innerHTML=`<div class="empty">${esc(ERR[e.code]||"Could not reach the server.")}</div>`;
+  }
+}
+function renderAdmin(){
+  const {posts:ps,authors:as}=admData;
+  const bar=`${fmt(CONFIG.verifyViews)} views and ${fmt(CONFIG.verifyLikes)} likes`;
+  const authorRows=[...as].sort((a,b)=>(b.views+b.likes)-(a.views+a.likes)).map(a=>{
+    const hit=a.views>=CONFIG.verifyViews&&a.likes>=CONFIG.verifyLikes;
+    return `<tr><td>${esc(a.name)}${a.verified?VER:""}</td><td>${a.posts}</td><td>${fmt(a.views)}</td><td>${fmt(a.likes)}</td>
+      <td>${a.verified?'<span class="st">Verified</span>':hit?'<span class="st pro">Meets the bar</span>':""}</td>
+      <td><button type="button" class="btn sm ${a.verified?"ghost":""}" data-act="verify" data-name="${esc(a.name)}" data-v="${a.verified?0:1}">${a.verified?"Remove":"Verify"}</button></td></tr>`;
+  }).join("");
+  const shown=ps.filter(x=>admStatus==="all"||x.status===admStatus);
+  const cls={approved:"",rejected:"down",pending:"pro"};
+  const rows=shown.map(x=>`<div class="arow">
+    <div><strong>${esc(x.title)}</strong> <span class="st ${cls[x.status]||""}">${esc(x.status)}</span></div>
+    <div class="meta">${esc(x.author)}${x.verified?VER:""} on ${esc(x.game)}, place ${esc(x.placeId)}, ${fmt(x.views)} views, ${fmt(x.likes)} likes</div>
+    <details><summary>Read script</summary><pre class="src">${esc(x.code)}</pre></details>
+    <div class="btns">
+      ${x.status!=="approved"?`<button type="button" class="btn sm" data-act="approve" data-id="${esc(x.id)}">Approve</button>`:""}
+      ${x.status!=="rejected"?`<button type="button" class="btn ghost sm" data-act="reject" data-id="${esc(x.id)}">Reject</button>`:""}
+      <button type="button" class="btn ghost sm" data-act="del" data-id="${esc(x.id)}">Delete</button>
+    </div></div>`).join("")||`<div class="empty">Nothing here.</div>`;
+  adm.innerHTML=`<div class="admtop"><p class="lede" style="flex:1">Authors are flagged when they reach ${bar} across approved posts. Verified authors skip the review queue.</p><button type="button" class="btn ghost sm" data-act="logout">Sign out</button></div>
+    <h3>Authors</h3>
+    <div class="tw"><table class="tbl"><thead><tr><th>Author</th><th>Posts</th><th>Views</th><th>Likes</th><th>Status</th><th></th></tr></thead><tbody>${authorRows||`<tr><td colspan="6">No authors yet.</td></tr>`}</tbody></table></div>
+    <h3>Posts</h3>
+    <div class="admtop" style="margin:0 0 16px"><label style="margin:0;color:var(--mute)">Show <select class="in" id="admFilter">${["pending","approved","rejected","all"].map(v=>`<option value="${v}"${v===admStatus?" selected":""}>${v}</option>`).join("")}</select></label></div>
+    ${rows}`;
+}
+async function admAct(b){
+  const act=b.dataset.act;
+  try{
+    if(act==="login"){
+      adminKey=document.getElementById("admPass").value;
+      try{sessionStorage.setItem("bc-admin",adminKey)}catch(e){}
+      return loadAdmin();
+    }
+    if(act==="logout"){adminKey="";try{sessionStorage.removeItem("bc-admin")}catch(e){}return loadAdmin()}
+    if(act==="verify") await api("admin_verify",{author:b.dataset.name,verified:b.dataset.v==="1"},adminKey);
+    else if(act==="approve"||act==="reject") await api("admin_set",{id:b.dataset.id,status:act==="approve"?"approved":"rejected"},adminKey);
+    else if(act==="del"){if(!confirm("Delete this post for good?"))return;await api("admin_del",{id:b.dataset.id},adminKey)}
+    loadAdmin();
+  }catch(e){alert(ERR[e.code]||"That did not work. Try again.")}
+}
+document.addEventListener("change",e=>{if(e.target.id==="admFilter"){admStatus=e.target.value;renderAdmin()}});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="admPass")admAct(document.querySelector("[data-act=login]"))});
+
+/* copy buttons */
+async function copy(text,btn){
+  const old=btn.textContent;
+  try{await navigator.clipboard.writeText(text);btn.textContent="Copied"}
+  catch(e){
+    const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();
+    try{document.execCommand("copy");btn.textContent="Copied"}catch(_){btn.textContent="Copy failed"}
+    t.remove();
+  }
+  setTimeout(()=>btn.textContent=old,1400);
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const d=b.dataset;
+  if(d.copy) copy(d.copy,b);
+  else if(d.copycode!==undefined) copy(document.getElementById("srcBox").textContent,b);
+  else if(d.open) openPost(d.open);
+  else if(d.like) likePost(d.like,b);
+  else if(d.close!==undefined) b.closest("dialog").close();
+  else if(d.act) admAct(b);
+});
+
+/* embers: red sparks rising behind the hero */
+(function(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv=document.getElementById("embers"), ctx=cv.getContext("2d"), home=document.getElementById("home");
+  let w=0,h=0,dpr=Math.min(devicePixelRatio||1,2), parts=[], acc="#d1121b", frame=0;
+  function size(){
+    const r=cv.parentElement.getBoundingClientRect();
+    w=r.width;h=r.height;cv.width=w*dpr;cv.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function spawn(initial){
+    return {x:Math.random()*w,y:initial?Math.random()*h:h+10,r:Math.random()*2.4+.8,
+      vy:-(Math.random()*.7+.25),vx:(Math.random()-.5)*.35,ph:Math.random()*6.28,
+      a:Math.random()*.6+.3,hot:Math.random()<.25};
+  }
+  function init(){size();parts=Array.from({length:Math.round(Math.min(70,w/16))},()=>spawn(true))}
+  function tick(t){
+    requestAnimationFrame(tick);
+    if(!home.classList.contains("on")||document.hidden) return;
+    if(!w) init();
+    if(!(frame++%10)) acc=getComputedStyle(document.documentElement).getPropertyValue("--acc").trim()||acc;
+    ctx.clearRect(0,0,w,h);
+    for(const p of parts){
+      p.y+=p.vy;p.x+=p.vx+Math.sin(t/900+p.ph)*.25;
+      if(p.y<-10||p.x<-10||p.x>w+10){Object.assign(p,spawn(false));continue}
+      const fade=Math.min(1,p.y/(h*.5));
+      ctx.globalAlpha=p.a*fade;
+      ctx.fillStyle=p.hot?"#f3f1ec":acc;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+  }
+  addEventListener("resize",()=>{w=0});
+  requestAnimationFrame(tick);
+})();
+
+/* background sound: one toggle. Audio only, starts on the first click or key press (browsers block sound before that) */
+(function(){
+  const ID="XMeQeIG_rQg", VOL=35;
+  const btn=document.getElementById("snd");
+  let pl=null, ready=false, want=true;
+  try{ if(localStorage.getItem("bc-sound")==="off") want=false }catch(e){}
+  function label(on){btn.textContent=on?"Sound off":"Sound on";btn.setAttribute("aria-pressed",on?"true":"false")}
+  function start(){ if(!ready) return; pl.unMute(); pl.setVolume(VOL); pl.playVideo() }
+  function gesture(e){
+    if(e.target.closest&&e.target.closest("#dock")) return;
+    if(!want) return cleanup();
+    if(!ready) return;
+    start(); cleanup();
+  }
+  function cleanup(){ removeEventListener("pointerdown",gesture); removeEventListener("keydown",gesture) }
+  addEventListener("pointerdown",gesture); addEventListener("keydown",gesture);
+  window.onYouTubeIframeAPIReady=function(){
+    pl=new YT.Player("yt",{
+      width:"200",height:"200",videoId:ID,
+      playerVars:{playsinline:1,loop:1,playlist:ID,rel:0,controls:0,disablekb:1,modestbranding:1},
+      events:{
+        onReady(){ ready=true; pl.setVolume(VOL); if(want) pl.playVideo() },
+        onStateChange(e){ label(e.data===1) }
+      }
+    });
+  };
+  btn.addEventListener("click",()=>{
+    if(!ready) return;
+    if(pl.getPlayerState()===1){ pl.pauseVideo(); want=false; try{localStorage.setItem("bc-sound","off")}catch(e){} }
+    else { want=true; start(); try{localStorage.setItem("bc-sound","on")}catch(e){} }
+    cleanup();
+  });
+  const t=document.createElement("script"); t.src="https://www.youtube.com/iframe_api"; t.async=true; document.head.appendChild(t);
+})();
+
+/* ---------- accounts, dashboard, profile ---------- */
+const $=id=>document.getElementById(id);
+const ACCENTS=["","#e0a93b","#3a9bff","#34c38f","#a855f7","#ff5fa2","#f3f1ec"];
+let CUR="home",authMode="login",authNote="",accSel="";
+const dateOf=ms=>new Date(ms).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+function avatar(u,cls){
+  if(u.av) return `<img class="av ${cls||""}" alt="" src="${API}?a=avatar&u=${encodeURIComponent(u.name.toLowerCase())}&v=${u.av}">`;
+  return `<span class="av none ${cls||""}" aria-hidden="true">${esc(u.name.slice(0,1).toUpperCase())}</span>`;
+}
+function setAuth(token,me){
+  TOKEN=token||"";ME=me||null;
+  try{TOKEN?localStorage.setItem("bc-token",TOKEN):localStorage.removeItem("bc-token")}catch(e){}
+  renderNav();
+}
+function markTabs(){
+  document.querySelectorAll("[data-tab]").forEach(t=>t.dataset.tab===CUR?t.setAttribute("aria-current","page"):t.removeAttribute("aria-current"));
+}
+function renderNav(){
+  $("navUser").innerHTML=ME
+    ?`<a href="#dashboard" data-tab="dashboard">Dashboard</a><a href="#u/${encodeURIComponent(ME.name)}" data-tab="profile">Profile</a>`
+    :`<a href="#login" data-tab="login">Login</a>`;
+  markTabs();
+}
+function cropJpeg(file,w,h,q){
+  return new Promise((ok,no)=>{
+    const img=new Image(),u=URL.createObjectURL(file);
+    img.onload=()=>{
+      const c=document.createElement("canvas");c.width=w;c.height=h;
+      const x=c.getContext("2d"),k=Math.max(w/img.width,h/img.height),dw=img.width*k,dh=img.height*k;
+      x.fillStyle="#000";x.fillRect(0,0,w,h);x.drawImage(img,(w-dw)/2,(h-dh)/2,dw,dh);
+      URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",q));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(u);no(Object.assign(new Error("bad_image"),{code:"bad_image"}))};
+    img.src=u;
+  });
+}
+function expired(){setAuth("",null);authNote="Your session expired. Log in again.";location.hash="#login"}
+
+/* login / create account */
+function renderAuth(){
+  if(ME){location.hash="#dashboard";return}
+  const reg=authMode==="register",f=$("authForm").elements;
+  $("authTitle").textContent=reg?"Create account":"Log in";
+  $("authLede").textContent=reg?"Pick a username and a password. You can post scripts and customize your profile right away.":"Log in to post scripts, open your dashboard and edit your profile.";
+  [...$("authTabs").children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===authMode));
+  $("authConfirm").hidden=!reg;f.pass2.required=reg;
+  f.pass.autocomplete=reg?"new-password":"current-password";
+  $("authGo").textContent=reg?"Create account":"Log in";
+  $("authHint").textContent=reg?"Usernames use letters, numbers, dot, dash and underscore, 3 to 20 characters. Passwords need 6 or more.":"Posted a script before accounts existed? Log in with the same name and password you used then.";
+  $("authMsg").textContent=authNote;authNote="";
+}
+$("authTabs").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;authMode=b.dataset.m;renderAuth()});
+$("authForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const f=$("authForm").elements,msg=$("authMsg"),btn=$("authGo");
+  if(authMode==="register"&&f.pass.value!==f.pass2.value){msg.textContent="Passwords do not match.";return}
+  msg.textContent="One moment...";btn.disabled=true;
+  try{
+    const r=await api(authMode,{name:f.name.value,pass:f.pass.value});
+    $("authForm").reset();setAuth(r.token,r.me);location.hash="#dashboard";
+  }catch(err){msg.textContent=ERR[err.code]||"Could not reach the server. Try again."}
+  btn.disabled=false;
+});
+
+/* dashboard */
+function drawSwatches(){
+  $("swatches").innerHTML=ACCENTS.map(c=>`<button type="button" data-acc="${c}" aria-pressed="${c===accSel}" aria-label="${c||"Default red"}" style="background:${c||"#d1121b"}"></button>`).join("")
+    +`<input type="color" id="accPick" value="${accSel||"#d1121b"}" aria-label="Custom color">`;
+  accSel?$("dashboard").style.setProperty("--acc",accSel):$("dashboard").style.removeProperty("--acc");
+}
+$("swatches").addEventListener("input",e=>{
+  if(e.target.id!=="accPick")return;
+  accSel=e.target.value;$("dashboard").style.setProperty("--acc",accSel);
+  $("swatches").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed","false"));
+});
+async function loadDash(){
+  if(!TOKEN){authNote="Log in to open your dashboard.";location.hash="#login";return}
+  $("dashHead").innerHTML=`<p class="meta">Loading...</p>`;
+  try{const r=await api("mine");ME=r.me;renderNav();renderDash(r)}
+  catch(e){
+    if(e.status===401) expired();
+    else $("dashHead").innerHTML=`<div class="empty">${esc(ERR[e.code]||"Could not reach the server.")}</div>`;
+  }
+}
+function renderDash(r){
+  const m=r.me,t=r.totals;
+  $("dashHead").innerHTML=`<div class="dhead">${avatar(m)}<div><h2>${esc(m.display||m.name)}${m.verified?VER:""}</h2><div class="meta">@${esc(m.name)}</div></div></div>
+    <div class="btns" style="margin-top:20px"><button type="button" class="btn sm" data-postopen>Post script</button><a class="btn ghost sm" href="#u/${encodeURIComponent(m.name)}">View profile</a><button type="button" class="btn ghost sm" data-logout>Log out</button></div>`;
+  $("dashTiles").innerHTML=[["Scripts live",t.posts],["Views",fmt(t.views)],["Likes",fmt(t.likes)],["In review",t.pending]].map(([k,v])=>`<div class="tile"><b>${v}</b><span>${k}</span></div>`).join("");
+  const cls={approved:"",rejected:"down",pending:"pro"},lab={approved:"Live",rejected:"Rejected",pending:"In review"};
+  $("dashPosts").innerHTML=r.posts.length?r.posts.map(x=>`<article class="script"><div><h3>${esc(x.title)}<span class="st ${cls[x.status]||""}">${esc(lab[x.status]||x.status)}</span></h3><div class="meta">${esc(x.game)}, place ${esc(x.placeId)}</div><div class="stat">${fmt(x.views)} views, ${fmt(x.likes)} likes</div></div><div class="btns">${x.status==="approved"?`<button type="button" class="btn ghost sm" data-open="${esc(x.id)}">Open</button>`:""}<button type="button" class="btn ghost sm" data-mydel="${esc(x.id)}">Delete</button></div></article>`).join("")
+    :`<div class="empty">You have not posted anything yet.</div>`;
+  const f=$("profForm").elements;
+  f.display.value=m.display;f.bio.value=m.bio;f.discord.value=m.discord;f.game.value=m.game;
+  f.avatar.value="";f.banner.value="";f.rmAvatar.checked=false;f.rmBanner.checked=false;
+  accSel=m.accent||"";drawSwatches();
+}
+$("profForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const f=$("profForm").elements,msg=$("profMsg"),btn=$("profSave");
+  msg.textContent="Saving...";btn.disabled=true;
+  try{
+    const body={display:f.display.value,bio:f.bio.value,discord:f.discord.value,game:f.game.value,accent:accSel,removeAvatar:f.rmAvatar.checked,removeBanner:f.rmBanner.checked};
+    if(f.avatar.files[0]) body.avatar=await cropJpeg(f.avatar.files[0],160,160,.82);
+    if(f.banner.files[0]) body.banner=await cropJpeg(f.banner.files[0],900,300,.7);
+    const r=await api("profile_set",body);
+    ME=r.me;renderNav();msg.textContent="Saved.";loadDash();
+  }catch(err){
+    if(err.status===401) expired();
+    else msg.textContent=ERR[err.code]||"Could not save. Try again.";
+  }
+  btn.disabled=false;
+});
+
+/* public profile */
+async function loadProfile(name){
+  const box=$("profBody"),sec=$("profile");
+  sec.style.removeProperty("--acc");
+  box.innerHTML=`<p class="meta">Loading...</p>`;
+  try{
+    const r=await api("profile&u="+encodeURIComponent(name));
+    const u=r.user,t=r.totals,own=!!ME&&ME.name.toLowerCase()===u.name.toLowerCase(),un=encodeURIComponent(u.name.toLowerCase());
+    if(u.accent) sec.style.setProperty("--acc",u.accent);
+    document.title=`${u.display||u.name} | BlackClover`;
+    box.innerHTML=`<div class="pbanner">${u.bn?`<img alt="" src="${API}?a=banner&u=${un}&v=${u.bn}">`:""}</div>
+      <div class="phead">${avatar(u)}<div><h2>${esc(u.display||u.name)}${u.verified?VER:""}</h2><div class="meta">@${esc(u.name)}, joined ${esc(dateOf(u.joined))}</div></div></div>
+      ${u.bio?`<p class="desc">${esc(u.bio)}</p>`:""}
+      <div class="feat">${u.game?`<span>Plays ${esc(u.game)}</span>`:""}${u.discord?`<span>Discord: ${esc(u.discord)}</span>`:""}</div>
+      <div class="tiles" style="grid-template-columns:repeat(3,1fr)"><div class="tile"><b>${t.posts}</b><span>Scripts</span></div><div class="tile"><b>${fmt(t.views)}</b><span>Views</span></div><div class="tile"><b>${fmt(t.likes)}</b><span>Likes</span></div></div>
+      ${own?`<div class="btns"><a class="btn sm" href="#dashboard">Dashboard and edit profile</a></div>`:""}
+      <h3 class="sec">Scripts</h3>
+      <div class="list">${r.posts.length?r.posts.map(card).join(""):`<div class="empty">No scripts yet.</div>`}</div>`;
+  }catch(e){box.innerHTML=`<div class="empty">${e.code==="not_found"?"That profile does not exist.":esc(ERR[e.code]||"Could not reach the server.")}</div>`}
+}
+
+/* key checkpoint */
+const CP={st:null,timer:0,err:""};
+const CPERR={too_fast:"The timer is not done yet.",not_opened:"Open the checkpoint link first.",key_limit:"Key limit reached on this network today. Try again tomorrow."};
+async function loadCp(){
+  CP.err="";
+  try{CP.st=await api("cp_state",{cid})}catch(e){CP.st=null;CP.err=ERR[e.code]||"Could not reach the server."}
+  drawCp();cpTick();
+}
+function cpTick(){
+  clearInterval(CP.timer);
+  if(!CP.st||!CP.st.opened||CP.st.left<=0||CP.st.key) return;
+  CP.timer=setInterval(()=>{
+    CP.st.left=Math.max(0,CP.st.left-1);drawCp();
+    if(CP.st.left<=0) clearInterval(CP.timer);
+  },1000);
+}
+function drawCp(){
+  const el=$("cp"),s=CP.st;
+  if(!s){el.innerHTML=`<div class="empty" style="margin-top:14px">${esc(CP.err)}</div>`;drawKey();return}
+  const items=Array.from({length:s.total},(_,i)=>{
+    const c=(CONFIG.checkpoints||[])[i]||{label:"Checkpoint "+(i+1)};
+    const state=s.key||i<s.step?"done":i===s.step?"now":"lock";
+    let act="";
+    if(state==="now") act=!s.opened
+      ?`<button type="button" class="btn sm" data-cp="open">Open checkpoint</button>`
+      :(s.left>0?`<button type="button" class="btn sm" disabled>Continue in ${s.left}s</button>`:`<button type="button" class="btn sm" data-cp="next">Continue</button>`)+`<button type="button" class="btn ghost sm" data-cp="reopen">Open again</button>`;
+    return `<div class="cpi ${state}"><span class="cpn">${state==="done"?"&#10003;":i+1}</span><div><strong>${esc(c.label)}</strong>${act?`<div class="btns" style="margin-top:10px">${act}</div>`:""}</div></div>`;
+  }).join("");
+  el.innerHTML=`<div class="cplist">${items}</div><p class="msg" role="status" style="margin:12px 0 0">${esc(CP.err)}</p>`;
+  drawKey();
+}
+function drawKey(){
+  const s=CP.st,out=$("keyOut"),ex=$("keyEx"),cb=$("keyExCopy");
+  if(s&&s.key){
+    out.innerHTML=`<div class="code"><code>${esc(s.key)}</code><button type="button" class="btn sm" data-copy="${esc(s.key)}">Copy</button></div><p class="meta" style="margin-top:10px">Valid until ${esc(new Date(s.exp).toLocaleString())}.</p>`;
+    ex.textContent=`script_key = "${s.key}"`;
+  }else{
+    out.innerHTML=`<p class="meta">Finish the checkpoint to reveal your key.</p>`;
+    ex.textContent='script_key = "YOUR-KEY"';
+  }
+  cb.dataset.copy=ex.textContent;
+}
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-cp]");
+  if(!b||!CP.st) return;
+  const act=b.dataset.cp,c=(CONFIG.checkpoints||[])[CP.st.step];
+  if((act==="open"||act==="reopen")&&c&&c.url) window.open(c.url,"_blank","noopener");
+  if(act==="reopen") return;
+  try{
+    CP.err="";
+    CP.st=await api(act==="open"?"cp_open":"cp_next",{cid});
+  }catch(err){
+    CP.err=CPERR[err.code]||ERR[err.code]||"That did not work. Try again.";
+    if(err.code==="too_fast") loadCp();
+  }
+  drawCp();cpTick();
+});
+
+/* clicks for accounts */
+document.addEventListener("click",async e=>{
+  const t=e.target;
+  const lk=t.closest("dialog a[href^='#u/']");
+  if(lk) lk.closest("dialog").close();
+  if(t.closest("[data-postopen]")) return openPostForm();
+  if(t.closest("[data-logout]")){try{await api("logout",{})}catch(_){}setAuth("",null);location.hash="#home";return}
+  const d=t.closest("[data-mydel]");
+  if(d){
+    if(!confirm("Delete this script for good?")) return;
+    try{await api("mydel",{id:d.dataset.mydel});loadDash()}catch(err){alert(ERR[err.code]||"That did not work. Try again.")}
+    return;
+  }
+  const sw=t.closest("[data-acc]");
+  if(sw){accSel=sw.dataset.acc;drawSwatches()}
+});
+addEventListener("hashchange",()=>document.querySelectorAll("dialog[open]").forEach(d=>d.close()));
+
+/* tab routing on #hash */
+const pages=[...document.querySelectorAll("[data-page]")];
+const names=pages.map(p=>p.dataset.page);
+function route(){
+  const raw=location.hash.slice(1);
+  let name=raw,arg="";
+  if(raw.startsWith("u/")){name="profile";try{arg=decodeURIComponent(raw.slice(2))}catch(e){arg=raw.slice(2)}}
+  if(!names.includes(name)) name="home";
+  CUR=name==="profile"&&!(ME&&arg.toLowerCase()===ME.name.toLowerCase())?"":name;
+  pages.forEach(p=>p.classList.toggle("on",p.dataset.page===name));
+  markTabs();
+  const titles={home:"BlackClover | Anti-magic scripts",scripts:"Scripts | BlackClover",premium:"Premium | BlackClover",getkey:"Get key | BlackClover",admin:"Admin | BlackClover",login:"Account | BlackClover",dashboard:"Dashboard | BlackClover",profile:"Profile | BlackClover"};
+  document.title=titles[name];
+  window.scrollTo(0,0);
+  clearInterval(CP.timer);
+  if(name==="scripts") load();
+  if(name==="admin") loadAdmin();
+  if(name==="getkey") loadCp();
+  if(name==="login") renderAuth();
+  if(name==="dashboard") loadDash();
+  if(name==="profile") loadProfile(arg);
+}
+window.addEventListener("hashchange",route);
+async function boot(){
+  if(TOKEN){
+    try{ME=(await api("me")).me}catch(e){if(e.status===401)setAuth("",null)}
+  }
+  renderNav();route();
+}
+boot();
+</script>
 </body>
 </html>
